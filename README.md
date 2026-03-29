@@ -52,19 +52,78 @@ An animated mascot that bounces, celebrates, and reacts to the child's progress 
 | React Native Animated API | Smooth animations |
 | TypeScript | Type safety |
 
-## Getting Started
+## Running on Your Phone
+
+### Option A — Expo Go (fastest, no build needed)
+
+This is the easiest way to run the app on any Android or iPhone **right now**.
+
+1. **Install Expo Go** on your phone:
+   - Android: [Google Play Store → "Expo Go"](https://play.google.com/store/apps/details?id=host.exp.exponent)
+   - iPhone: [App Store → "Expo Go"](https://apps.apple.com/app/expo-go/id982107779)
+
+2. **Clone & install** on your computer:
+   ```bash
+   git clone <repo-url> && cd kidlearnAI
+   npm install
+   ```
+
+3. **Generate image assets** (first time only):
+   ```bash
+   npm run generate-assets
+   ```
+
+4. **Start the dev server:**
+   ```bash
+   npm start
+   # or if on a different network:
+   npm run start:tunnel
+   ```
+
+5. **Scan the QR code** with:
+   - **Android** → open Expo Go and tap "Scan QR code"
+   - **iPhone** → open the default Camera app and point at the QR code
+
+The app will load on your phone instantly. Any code changes you make will refresh live.
+
+---
+
+### Option B — Build an APK / IPA (install directly, no Expo Go needed)
+
+Use [EAS Build](https://docs.expo.dev/build/introduction/) to compile a standalone app.
+
+**Prerequisites:** free account at [expo.dev](https://expo.dev)
 
 ```bash
-# Install dependencies
-npm install
+# Install EAS CLI globally
+npm install -g eas-cli
 
-# Start the dev server
-npm start
+# Log in to your Expo account
+eas login
 
-# Run on Android
+# Build Android APK (share & install on any Android phone)
+npm run build:android
+
+# Build iOS IPA (requires Apple Developer account)
+npm run build:ios
+```
+
+EAS builds in the cloud — no Xcode or Android Studio needed. When the build finishes, you'll get a download link for the `.apk` / `.ipa` file.
+
+**Install the APK on Android:**
+1. Download the `.apk` from the build link
+2. On your phone go to **Settings → Apps → Install unknown apps** and allow your browser
+3. Open the downloaded `.apk` to install
+
+---
+
+### Option C — Run on simulator/emulator
+
+```bash
+# Android emulator (requires Android Studio)
 npm run android
 
-# Run on iOS
+# iOS simulator (requires Xcode on macOS)
 npm run ios
 ```
 

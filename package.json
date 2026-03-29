@@ -4,9 +4,14 @@
   "main": "expo-router/entry",
   "scripts": {
     "start": "expo start",
+    "start:tunnel": "expo start --tunnel",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "build:android": "eas build --platform android --profile preview",
+    "build:ios": "eas build --platform ios --profile preview",
+    "build:all": "eas build --platform all --profile preview",
+    "generate-assets": "node scripts/generate-assets.js"
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.0",
@@ -28,6 +33,7 @@
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@types/react": "~18.2.79",
+    "eas-cli": "^13.0.0",
     "typescript": "~5.3.3"
   }
 }
