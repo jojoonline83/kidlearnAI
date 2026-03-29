@@ -26,7 +26,15 @@
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/favicon.png",
+      "themeColor": "#FF6B6B",
+      "backgroundColor": "#F0F4FF",
+      "name": "KidLearnAI",
+      "shortName": "KidLearnAI",
+      "description": "Learn AI with Sparky! Fun lessons, quizzes, and coding for kids aged 7–10.",
+      "lang": "en",
+      "scope": "/",
+      "startUrl": "/"
     },
     "plugins": [
       "expo-router"

@@ -1,6 +1,71 @@
 # KidLearnAI 🤖
 
-A mobile application that teaches children aged 7–10 about Artificial Intelligence through interactive lessons, quizzes, block-based coding, and a reward system.
+A mobile-first web app (PWA) that teaches children aged 7–10 about Artificial Intelligence through interactive lessons, quizzes, block-based coding, and a reward system.
+
+Works in **any mobile browser** (Chrome, Safari, Samsung Internet) — no app store needed.
+Can also be installed as a home-screen app and run on Android / iOS natively.
+
+---
+
+## Run in a Mobile Phone Browser
+
+### Option 1 — Dev server (LAN, fastest for testing)
+
+```bash
+git clone <repo> && cd kidlearnAI
+npm install
+npm run generate-assets   # first time only
+npm run web               # starts the dev server
+```
+
+Open the URL printed in the terminal (e.g. `http://192.168.1.x:8081`) in your phone's browser.
+Your phone and computer must be on the **same Wi-Fi network**.
+
+If they're on different networks, use tunnel mode instead:
+
+```bash
+npm run web:tunnel        # creates a public ngrok URL, slower but works anywhere
+```
+
+---
+
+### Option 2 — Build a static site and serve locally
+
+```bash
+npm install
+npm run build:web         # outputs to the dist/ folder
+npm run serve:web         # serves dist/ on http://localhost:3000
+```
+
+Then open `http://YOUR_COMPUTER_IP:3000` on your phone browser.
+
+---
+
+### Option 3 — Deploy to the internet (share with anyone)
+
+**Vercel (free, 1 command):**
+```bash
+npm install -g vercel
+vercel                    # follow prompts → get a public https:// URL
+```
+
+**Netlify (free, drag & drop):**
+```bash
+npm run build:web         # creates dist/
+# Drag the dist/ folder to https://app.netlify.com/drop
+```
+
+---
+
+### Install as a Home-Screen App (PWA)
+
+Once the app is open in the browser:
+- **Android Chrome** → tap the ⋮ menu → "Add to Home screen"
+- **iPhone Safari** → tap the Share button → "Add to Home Screen"
+
+The app will appear as a full-screen icon on the home screen, exactly like a native app.
+
+---
 
 ## Features
 
