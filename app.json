@@ -33,14 +33,15 @@
       "shortName": "KidLearnAI",
       "description": "Learn AI with Sparky! Fun lessons, quizzes, and coding for kids aged 7–10.",
       "lang": "en",
-      "scope": "/",
-      "startUrl": "/"
+      "scope": "/kidlearnAI/",
+      "startUrl": "/kidlearnAI/"
     },
     "plugins": [
       "expo-router"
     ],
     "experiments": {
-      "typedRoutes": true
+      "typedRoutes": true,
+      "baseUrl": "/kidlearnAI"
     }
   }
 }
