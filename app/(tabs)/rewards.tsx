@@ -68,6 +68,7 @@ export default function RewardsScreen() {
   const headerScale = useRef(new Animated.Value(isWeb ? 1 : 0.9)).current;
 
   useEffect(() => {
+    if (isWeb) return;
     Animated.parallel([
       Animated.timing(headerAnim, { toValue: 1, duration: 600, useNativeDriver: true }),
       Animated.spring(headerScale, { toValue: 1, tension: 80, friction: 8, useNativeDriver: true }),

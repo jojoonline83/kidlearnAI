@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { View, Animated, StyleSheet, Text } from 'react-native';
+import { View, Animated, StyleSheet, Text, Platform } from 'react-native';
 import { Colors } from '@/constants/Colors';
 
 interface MascotCharacterProps {
@@ -19,7 +19,7 @@ export default function MascotCharacter({
   const scaleAnim = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
-    if (!animate) return;
+    if (!animate || Platform.OS === 'web') return;
 
     if (mood === 'celebrating') {
       Animated.loop(

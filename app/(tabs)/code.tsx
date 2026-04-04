@@ -34,6 +34,7 @@ function ChallengeCard({ challenge, completed, onStart, index }: ChallengeCardPr
   const scaleAnim = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
+    if (isWeb) return;
     Animated.parallel([
       Animated.timing(slideAnim, { toValue: 0, duration: 350, delay: index * 80, useNativeDriver: true }),
       Animated.timing(opacityAnim, { toValue: 1, duration: 350, delay: index * 80, useNativeDriver: true }),

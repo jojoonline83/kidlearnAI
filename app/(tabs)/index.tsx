@@ -39,6 +39,7 @@ function NavCard({ emoji, title, subtitle, color, gradientEnd, progress, onPress
   const scaleAnim = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
+    if (isWeb) return;
     Animated.parallel([
       Animated.timing(slideAnim, { toValue: 0, duration: 400, delay, useNativeDriver: true }),
       Animated.timing(opacityAnim, { toValue: 1, duration: 400, delay, useNativeDriver: true }),
@@ -94,6 +95,7 @@ export default function HomeScreen() {
   const headerOpacity = useRef(new Animated.Value(isWeb ? 1 : 0)).current;
 
   useEffect(() => {
+    if (isWeb) return;
     Animated.parallel([
       Animated.spring(headerScale, { toValue: 1, tension: 80, friction: 8, useNativeDriver: true }),
       Animated.timing(headerOpacity, { toValue: 1, duration: 500, useNativeDriver: true }),

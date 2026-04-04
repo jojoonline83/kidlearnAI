@@ -35,6 +35,7 @@ function LessonCard({ lesson, completed, onStart, index }: LessonCardProps) {
   const opacityAnim = useRef(new Animated.Value(isWeb ? 1 : 0)).current;
 
   React.useEffect(() => {
+    if (isWeb) return;
     Animated.parallel([
       Animated.timing(slideAnim, { toValue: 0, duration: 400, delay: index * 80, useNativeDriver: true }),
       Animated.timing(opacityAnim, { toValue: 1, duration: 400, delay: index * 80, useNativeDriver: true }),
