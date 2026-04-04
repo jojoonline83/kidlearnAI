@@ -9,6 +9,7 @@ import {
   SafeAreaView,
   Modal,
   Alert,
+  Platform,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Colors } from '@/constants/Colors';
@@ -27,8 +28,9 @@ interface ChallengeCardProps {
 }
 
 function ChallengeCard({ challenge, completed, onStart, index }: ChallengeCardProps) {
-  const slideAnim = useRef(new Animated.Value(40)).current;
-  const opacityAnim = useRef(new Animated.Value(0)).current;
+  const isWeb = Platform.OS === 'web';
+  const slideAnim = useRef(new Animated.Value(isWeb ? 0 : 40)).current;
+  const opacityAnim = useRef(new Animated.Value(isWeb ? 1 : 0)).current;
   const scaleAnim = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {

@@ -27,13 +27,13 @@ export default function Root({ children }: { children: React.ReactNode }) {
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="KidLearnAI" />
-        <link rel="apple-touch-icon" href="/assets/images/icon.png" />
+        <link rel="apple-touch-icon" href="/kidlearnAI/assets/images/icon.png" />
 
         {/* ── Android PWA ── */}
-        <link rel="manifest" href="/manifest.json" />
+        <link rel="manifest" href="/kidlearnAI/manifest.json" />
 
         {/* ── Favicon ── */}
-        <link rel="icon" type="image/png" href="/assets/images/favicon.png" />
+        <link rel="icon" type="image/png" href="/kidlearnAI/assets/images/favicon.png" />
 
         {/* ── Resets needed by Expo ScrollView on web ── */}
         <ScrollViewStyleReset />

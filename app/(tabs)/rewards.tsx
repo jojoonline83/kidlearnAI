@@ -8,6 +8,7 @@ import {
   Animated,
   SafeAreaView,
   Modal,
+  Platform,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Colors } from '@/constants/Colors';
@@ -62,8 +63,9 @@ export default function RewardsScreen() {
 
   const [selectedBadge, setSelectedBadge] = useState<typeof BADGES[0] | null>(null);
 
-  const headerAnim = useRef(new Animated.Value(0)).current;
-  const headerScale = useRef(new Animated.Value(0.9)).current;
+  const isWeb = Platform.OS === 'web';
+  const headerAnim = useRef(new Animated.Value(isWeb ? 1 : 0)).current;
+  const headerScale = useRef(new Animated.Value(isWeb ? 1 : 0.9)).current;
 
   useEffect(() => {
     Animated.parallel([

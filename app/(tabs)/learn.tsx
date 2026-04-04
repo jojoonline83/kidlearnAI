@@ -9,6 +9,7 @@ import {
   SafeAreaView,
   Modal,
   Dimensions,
+  Platform,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Colors } from '@/constants/Colors';
@@ -28,9 +29,10 @@ interface LessonCardProps {
 }
 
 function LessonCard({ lesson, completed, onStart, index }: LessonCardProps) {
+  const isWeb = Platform.OS === 'web';
   const scaleAnim = useRef(new Animated.Value(1)).current;
-  const slideAnim = useRef(new Animated.Value(50)).current;
-  const opacityAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(isWeb ? 0 : 50)).current;
+  const opacityAnim = useRef(new Animated.Value(isWeb ? 1 : 0)).current;
 
   React.useEffect(() => {
     Animated.parallel([
