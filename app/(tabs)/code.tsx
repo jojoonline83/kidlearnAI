@@ -9,6 +9,7 @@ import {
   SafeAreaView,
   Platform,
 } from 'react-native';
+import { Link, useLocalSearchParams, router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Colors } from '@/constants/Colors';
 import { CODE_CHALLENGES, CodeChallenge, CodeBlock } from '@/constants/codeData';
@@ -22,24 +23,10 @@ import { Tap } from '@/components/Tap';
 interface ChallengeCardProps {
   challenge: CodeChallenge;
   completed: boolean;
-  onStart: () => void;
   index: number;
 }
 
-function ChallengeCard({ challenge, completed, onStart, index }: ChallengeCardProps) {
-  const slideAnim = useRef(new Animated.Value(0)).current;
-  const opacityAnim = useRef(new Animated.Value(1)).current;
-  const scaleAnim = useRef(new Animated.Value(1)).current;
-
-  useEffect(() => {
-    if (Platform.OS !== 'ios' && Platform.OS !== 'android') return;
-    slideAnim.setValue(40); opacityAnim.setValue(0);
-    Animated.parallel([
-      Animated.timing(slideAnim, { toValue: 0, duration: 350, delay: index * 80, useNativeDriver: true }),
-      Animated.timing(opacityAnim, { toValue: 1, duration: 350, delay: index * 80, useNativeDriver: true }),
-    ]).start();
-  }, []);
-
+function ChallengeCard({ challenge, completed, index }: ChallengeCardProps) {
   const cardInner = (
     <LinearGradient
       colors={[challenge.color, challenge.color + 'BB']}
@@ -73,15 +60,14 @@ function ChallengeCard({ challenge, completed, onStart, index }: ChallengeCardPr
     </LinearGradient>
   );
 
-  const tap = <Tap onPress={onStart}>{cardInner}</Tap>;
-  if (Platform.OS === 'ios' || Platform.OS === 'android') {
-    return (
-      <Animated.View style={{ transform: [{ translateY: slideAnim }, { scale: scaleAnim }], opacity: opacityAnim }}>
-        {tap}
-      </Animated.View>
-    );
-  }
-  return tap;
+  return (
+    <Link
+      href={`/(tabs)/code?challengeId=${challenge.id}` as any}
+      style={{ textDecorationLine: 'none' } as any}
+    >
+      {cardInner}
+    </Link>
+  );
 }
 
 // ── Code Block item ──────────────────────────────────────────────────
@@ -354,8 +340,11 @@ function ChallengePlayer({ challenge, onComplete, onClose }: ChallengePlayerProp
 // ── Main Code Screen ──────────────────────────────────────────────────
 export default function CodeScreen() {
   const { completedChallenges, addStars, completeChallenge } = useGameStore();
-  const [activeChallenge, setActiveChallenge] = useState<CodeChallenge | null>(null);
   const [showConfetti, setShowConfetti] = useState(false);
+  const { challengeId } = useLocalSearchParams<{ challengeId?: string }>();
+  const activeChallenge = challengeId ? (CODE_CHALLENGES.find(c => c.id === challengeId) ?? null) : null;
+
+  const handleClose = () => router.push('/(tabs)/code' as any);
 
   const handleComplete = () => {
     if (!activeChallenge) return;
@@ -364,11 +353,9 @@ export default function CodeScreen() {
       addStars(activeChallenge.stars);
       completeChallenge(activeChallenge.id);
     }
+    router.push('/(tabs)/code' as any);
     setShowConfetti(true);
-    setTimeout(() => {
-      setShowConfetti(false);
-      setActiveChallenge(null);
-    }, 2000);
+    setTimeout(() => setShowConfetti(false), 2000);
   };
 
   const completedCount = completedChallenges.length;
@@ -407,7 +394,6 @@ export default function CodeScreen() {
               key={challenge.id}
               challenge={challenge}
               completed={completedChallenges.includes(challenge.id)}
-              onStart={() => setActiveChallenge(challenge)}
               index={i}
             />
           ))}
@@ -430,7 +416,7 @@ export default function CodeScreen() {
           <ChallengePlayer
             challenge={activeChallenge}
             onComplete={handleComplete}
-            onClose={() => setActiveChallenge(null)}
+            onClose={handleClose}
           />
         </View>
       )}

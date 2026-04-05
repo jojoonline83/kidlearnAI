@@ -10,6 +10,7 @@ import {
   Dimensions,
   Platform,
 } from 'react-native';
+import { Link, useLocalSearchParams, router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Colors } from '@/constants/Colors';
 import { LESSONS, Lesson, LessonPage } from '@/constants/lessons';
@@ -24,24 +25,10 @@ const { width } = Dimensions.get('window');
 interface LessonCardProps {
   lesson: Lesson;
   completed: boolean;
-  onStart: () => void;
   index: number;
 }
 
-function LessonCard({ lesson, completed, onStart, index }: LessonCardProps) {
-  const scaleAnim = useRef(new Animated.Value(1)).current;
-  const slideAnim = useRef(new Animated.Value(0)).current;
-  const opacityAnim = useRef(new Animated.Value(1)).current;
-
-  React.useEffect(() => {
-    if (Platform.OS !== 'ios' && Platform.OS !== 'android') return;
-    slideAnim.setValue(50); opacityAnim.setValue(0);
-    Animated.parallel([
-      Animated.timing(slideAnim, { toValue: 0, duration: 400, delay: index * 80, useNativeDriver: true }),
-      Animated.timing(opacityAnim, { toValue: 1, duration: 400, delay: index * 80, useNativeDriver: true }),
-    ]).start();
-  }, []);
-
+function LessonCard({ lesson, completed, index }: LessonCardProps) {
   const cardInner = (
     <LinearGradient
       colors={[lesson.color, lesson.color + 'BB']}
@@ -75,15 +62,14 @@ function LessonCard({ lesson, completed, onStart, index }: LessonCardProps) {
     </LinearGradient>
   );
 
-  const tap = <Tap onPress={onStart}>{cardInner}</Tap>;
-  if (Platform.OS === 'ios' || Platform.OS === 'android') {
-    return (
-      <Animated.View style={{ transform: [{ translateY: slideAnim }, { scale: scaleAnim }], opacity: opacityAnim }}>
-        {tap}
-      </Animated.View>
-    );
-  }
-  return tap;
+  return (
+    <Link
+      href={`/(tabs)/learn?lessonId=${lesson.id}` as any}
+      style={{ textDecorationLine: 'none' } as any}
+    >
+      {cardInner}
+    </Link>
+  );
 }
 
 interface LessonViewerProps {
@@ -198,11 +184,13 @@ function LessonViewer({ lesson, onComplete, onClose }: LessonViewerProps) {
 
 export default function LearnScreen() {
   const { completedLessons, addStars, completeLesson } = useGameStore();
-  const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
   const [showConfetti, setShowConfetti] = useState(false);
-  const [justCompletedId, setJustCompletedId] = useState<string | null>(null);
+  const { lessonId } = useLocalSearchParams<{ lessonId?: string }>();
+  const selectedLesson = lessonId ? (LESSONS.find(l => l.id === lessonId) ?? null) : null;
 
   const completedCount = completedLessons.length;
+
+  const handleClose = () => router.push('/(tabs)/learn' as any);
 
   const handleComplete = () => {
     if (!selectedLesson) return;
@@ -211,12 +199,9 @@ export default function LearnScreen() {
       addStars(selectedLesson.stars);
       completeLesson(selectedLesson.id);
     }
+    router.push('/(tabs)/learn' as any);
     setShowConfetti(true);
-    setJustCompletedId(selectedLesson.id);
-    setTimeout(() => {
-      setShowConfetti(false);
-      setSelectedLesson(null);
-    }, 2500);
+    setTimeout(() => setShowConfetti(false), 2500);
   };
 
   return (
@@ -248,7 +233,6 @@ export default function LearnScreen() {
               key={lesson.id}
               lesson={lesson}
               completed={completedLessons.includes(lesson.id)}
-              onStart={() => setSelectedLesson(lesson)}
               index={i}
             />
           ))}
@@ -266,13 +250,12 @@ export default function LearnScreen() {
         <View style={{ height: 20 }} />
       </ScrollView>
 
-      {/* Inline overlay — more reliable than Modal on web */}
       {selectedLesson && (
         <View style={styles.overlay}>
           <LessonViewer
             lesson={selectedLesson}
             onComplete={handleComplete}
-            onClose={() => setSelectedLesson(null)}
+            onClose={handleClose}
           />
         </View>
       )}

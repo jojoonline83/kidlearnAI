@@ -9,6 +9,7 @@ import {
   SafeAreaView,
   Platform,
 } from 'react-native';
+import { Link, useLocalSearchParams, router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Colors } from '@/constants/Colors';
 import { QUIZ_LEVELS, QuizLevel, QuizQuestion } from '@/constants/quizData';
@@ -21,24 +22,10 @@ import { Tap } from '@/components/Tap';
 interface QuizLevelCardProps {
   level: QuizLevel;
   completed: boolean;
-  onStart: () => void;
   index: number;
 }
 
-function QuizLevelCard({ level, completed, onStart, index }: QuizLevelCardProps) {
-  const slideAnim = useRef(new Animated.Value(0)).current;
-  const opacityAnim = useRef(new Animated.Value(1)).current;
-  const scaleAnim = useRef(new Animated.Value(1)).current;
-
-  useEffect(() => {
-    if (Platform.OS !== 'ios' && Platform.OS !== 'android') return;
-    slideAnim.setValue(40); opacityAnim.setValue(0);
-    Animated.parallel([
-      Animated.timing(slideAnim, { toValue: 0, duration: 350, delay: index * 80, useNativeDriver: true }),
-      Animated.timing(opacityAnim, { toValue: 1, duration: 350, delay: index * 80, useNativeDriver: true }),
-    ]).start();
-  }, []);
-
+function QuizLevelCard({ level, completed, index }: QuizLevelCardProps) {
   const cardInner = (
     <View style={[styles.levelCard, { borderLeftColor: level.color, borderLeftWidth: 6 }]}>
       <View style={[styles.levelIconBox, { backgroundColor: level.color + '22' }]}>
@@ -66,15 +53,14 @@ function QuizLevelCard({ level, completed, onStart, index }: QuizLevelCardProps)
     </View>
   );
 
-  const tap = <Tap onPress={onStart}>{cardInner}</Tap>;
-  if (Platform.OS === 'ios' || Platform.OS === 'android') {
-    return (
-      <Animated.View style={{ transform: [{ translateY: slideAnim }, { scale: scaleAnim }], opacity: opacityAnim }}>
-        {tap}
-      </Animated.View>
-    );
-  }
-  return tap;
+  return (
+    <Link
+      href={`/(tabs)/quiz?levelId=${level.id}` as any}
+      style={{ textDecorationLine: 'none' } as any}
+    >
+      {cardInner}
+    </Link>
+  );
 }
 
 interface QuizPlayerProps {
@@ -274,10 +260,13 @@ function QuizPlayer({ level, onComplete, onClose }: QuizPlayerProps) {
 
 export default function QuizScreen() {
   const { completedQuizzes, addStars, completeQuiz } = useGameStore();
-  const [activeLevel, setActiveLevel] = useState<QuizLevel | null>(null);
   const [showConfetti, setShowConfetti] = useState(false);
+  const { levelId } = useLocalSearchParams<{ levelId?: string }>();
+  const activeLevel = levelId ? (QUIZ_LEVELS.find(l => l.id === levelId) ?? null) : null;
 
   const completedCount = completedQuizzes.length;
+
+  const handleClose = () => router.push('/(tabs)/quiz' as any);
 
   const handleComplete = (score: number) => {
     if (!activeLevel) return;
@@ -285,11 +274,9 @@ export default function QuizScreen() {
     const starsEarned = Math.round((score / activeLevel.questions.length) * activeLevel.starsReward);
     if (starsEarned > 0) addStars(starsEarned);
     if (!alreadyDone && score > 0) completeQuiz(activeLevel.id);
+    router.push('/(tabs)/quiz' as any);
     setShowConfetti(true);
-    setTimeout(() => {
-      setShowConfetti(false);
-      setActiveLevel(null);
-    }, 2500);
+    setTimeout(() => setShowConfetti(false), 2500);
   };
 
   return (
@@ -327,7 +314,6 @@ export default function QuizScreen() {
               key={level.id}
               level={level}
               completed={completedQuizzes.includes(level.id)}
-              onStart={() => setActiveLevel(level)}
               index={i}
             />
           ))}
@@ -338,7 +324,7 @@ export default function QuizScreen() {
 
       {activeLevel && (
         <View style={styles.overlay}>
-          <QuizPlayer level={activeLevel} onComplete={handleComplete} onClose={() => setActiveLevel(null)} />
+          <QuizPlayer level={activeLevel} onComplete={handleComplete} onClose={handleClose} />
         </View>
       )}
     </SafeAreaView>
