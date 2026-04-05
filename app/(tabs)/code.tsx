@@ -47,6 +47,7 @@ function ChallengeCard({ challenge, completed, onStart, index }: ChallengeCardPr
         onPress={onStart}
         onPressIn={() => Animated.spring(scaleAnim, { toValue: 0.97, useNativeDriver: Platform.OS !== 'web' }).start()}
         onPressOut={() => Animated.spring(scaleAnim, { toValue: 1, useNativeDriver: Platform.OS !== 'web' }).start()}
+        style={{ cursor: 'pointer' } as any}
       >
         <LinearGradient
           colors={[challenge.color, challenge.color + 'BB']}
@@ -103,7 +104,7 @@ function CodeBlockItem({ block, onPress, isInSequence = false, index }: CodeBloc
   };
 
   return (
-    <Pressable onPress={handlePress}>
+    <Pressable onPress={handlePress} style={{ cursor: 'pointer' } as any}>
       <Animated.View
         style={[
           styles.codeBlock,

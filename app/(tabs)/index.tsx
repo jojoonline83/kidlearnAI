@@ -9,7 +9,7 @@ import {
   SafeAreaView,
   Platform,
 } from 'react-native';
-import { router } from 'expo-router';
+import { Link } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Colors } from '@/constants/Colors';
 import { useGameStore } from '@/store/gameStore';
@@ -28,11 +28,11 @@ interface NavCardProps {
   color: string;
   gradientEnd: string;
   progress: number;
-  onPress: () => void;
+  href: string;
   delay?: number;
 }
 
-function NavCard({ emoji, title, subtitle, color, gradientEnd, progress, onPress, delay = 0 }: NavCardProps) {
+function NavCard({ emoji, title, subtitle, color, gradientEnd, progress, href, delay = 0 }: NavCardProps) {
   const isWeb = Platform.OS === 'web';
   const slideAnim = useRef(new Animated.Value(isWeb ? 0 : 40)).current;
   const opacityAnim = useRef(new Animated.Value(isWeb ? 1 : 0)).current;
@@ -55,24 +55,26 @@ function NavCard({ emoji, title, subtitle, color, gradientEnd, progress, onPress
     <Animated.View
       style={{ transform: [{ translateY: slideAnim }, { scale: scaleAnim }], opacity: opacityAnim, flex: 1 }}
     >
-      <Pressable onPress={onPress} onPressIn={handlePressIn} onPressOut={handlePressOut}>
-        <LinearGradient
-          colors={[color, gradientEnd]}
-          style={styles.navCard}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-        >
-          <Text style={styles.navCardEmoji}>{emoji}</Text>
-          <Text style={styles.navCardTitle}>{title}</Text>
-          <Text style={styles.navCardSubtitle}>{subtitle}</Text>
-          <View style={styles.navCardProgress}>
-            <View style={styles.progressTrack}>
-              <View style={[styles.progressFill, { width: `${Math.round(progress * 100)}%`, backgroundColor: Colors.white + 'CC' }]} />
+      <Link href={href as any} asChild>
+        <Pressable onPressIn={handlePressIn} onPressOut={handlePressOut} style={{ cursor: 'pointer' } as any}>
+          <LinearGradient
+            colors={[color, gradientEnd]}
+            style={styles.navCard}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+          >
+            <Text style={styles.navCardEmoji}>{emoji}</Text>
+            <Text style={styles.navCardTitle}>{title}</Text>
+            <Text style={styles.navCardSubtitle}>{subtitle}</Text>
+            <View style={styles.navCardProgress}>
+              <View style={styles.progressTrack}>
+                <View style={[styles.progressFill, { width: `${Math.round(progress * 100)}%`, backgroundColor: Colors.white + 'CC' }]} />
+              </View>
+              <Text style={styles.progressLabel}>{Math.round(progress * 100)}%</Text>
             </View>
-            <Text style={styles.progressLabel}>{Math.round(progress * 100)}%</Text>
-          </View>
-        </LinearGradient>
-      </Pressable>
+          </LinearGradient>
+        </Pressable>
+      </Link>
     </Animated.View>
   );
 }
@@ -166,7 +168,7 @@ export default function HomeScreen() {
               color="#4ECDC4"
               gradientEnd="#34B5AC"
               progress={lessonProgress}
-              onPress={() => router.push('/(tabs)/learn')}
+              href="/(tabs)/learn"
               delay={100}
             />
             <NavCard
@@ -176,7 +178,7 @@ export default function HomeScreen() {
               color="#A78BFA"
               gradientEnd="#8B6FE8"
               progress={quizProgress}
-              onPress={() => router.push('/(tabs)/quiz')}
+              href="/(tabs)/quiz"
               delay={200}
             />
           </View>
@@ -188,7 +190,7 @@ export default function HomeScreen() {
               color="#FB923C"
               gradientEnd="#E87520"
               progress={codeProgress}
-              onPress={() => router.push('/(tabs)/code')}
+              href="/(tabs)/code"
               delay={300}
             />
             <NavCard
@@ -198,7 +200,7 @@ export default function HomeScreen() {
               color="#34D399"
               gradientEnd="#22B87E"
               progress={0}
-              onPress={() => router.push('/(tabs)/rewards')}
+              href="/(tabs)/rewards"
               delay={400}
             />
           </View>

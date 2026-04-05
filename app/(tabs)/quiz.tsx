@@ -45,6 +45,7 @@ function QuizLevelCard({ level, completed, onStart, index }: QuizLevelCardProps)
         onPress={onStart}
         onPressIn={() => Animated.spring(scaleAnim, { toValue: 0.97, useNativeDriver: Platform.OS !== 'web' }).start()}
         onPressOut={() => Animated.spring(scaleAnim, { toValue: 1, useNativeDriver: Platform.OS !== 'web' }).start()}
+        style={{ cursor: 'pointer' } as any}
       >
         <View style={[styles.levelCard, { borderLeftColor: level.color, borderLeftWidth: 6 }]}>
           <View style={[styles.levelIconBox, { backgroundColor: level.color + '22' }]}>
@@ -226,7 +227,7 @@ function QuizPlayer({ level, onComplete, onClose }: QuizPlayerProps) {
         {/* Options */}
         <View style={styles.optionsContainer}>
           {question.options.map((option, idx) => (
-            <Pressable key={idx} onPress={() => handleAnswer(idx)} style={getOptionStyle(idx)} disabled={showFeedback}>
+            <Pressable key={idx} onPress={() => handleAnswer(idx)} style={[getOptionStyle(idx), { cursor: 'pointer' } as any]} disabled={showFeedback}>
               <View style={styles.optionIndex}>
                 <Text style={styles.optionIndexText}>
                   {showFeedback && idx === question.correct ? '✅' : showFeedback && idx === selectedAnswer ? '❌' : String.fromCharCode(65 + idx)}
