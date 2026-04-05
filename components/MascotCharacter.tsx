@@ -24,17 +24,17 @@ export default function MascotCharacter({
     if (mood === 'celebrating') {
       Animated.loop(
         Animated.sequence([
-          Animated.timing(bounceAnim, { toValue: -20, duration: 300, useNativeDriver: true }),
-          Animated.timing(bounceAnim, { toValue: 0, duration: 300, useNativeDriver: true }),
-          Animated.timing(bounceAnim, { toValue: -15, duration: 250, useNativeDriver: true }),
-          Animated.timing(bounceAnim, { toValue: 0, duration: 250, useNativeDriver: true }),
+          Animated.timing(bounceAnim, { toValue: -20, duration: 300, useNativeDriver: Platform.OS !== 'web' }),
+          Animated.timing(bounceAnim, { toValue: 0, duration: 300, useNativeDriver: Platform.OS !== 'web' }),
+          Animated.timing(bounceAnim, { toValue: -15, duration: 250, useNativeDriver: Platform.OS !== 'web' }),
+          Animated.timing(bounceAnim, { toValue: 0, duration: 250, useNativeDriver: Platform.OS !== 'web' }),
         ])
       ).start();
     } else {
       Animated.loop(
         Animated.sequence([
-          Animated.timing(bounceAnim, { toValue: -8, duration: 800, useNativeDriver: true }),
-          Animated.timing(bounceAnim, { toValue: 0, duration: 800, useNativeDriver: true }),
+          Animated.timing(bounceAnim, { toValue: -8, duration: 800, useNativeDriver: Platform.OS !== 'web' }),
+          Animated.timing(bounceAnim, { toValue: 0, duration: 800, useNativeDriver: Platform.OS !== 'web' }),
         ])
       ).start();
     }
@@ -42,8 +42,8 @@ export default function MascotCharacter({
     if (mood === 'excited') {
       Animated.loop(
         Animated.sequence([
-          Animated.timing(scaleAnim, { toValue: 1.08, duration: 400, useNativeDriver: true }),
-          Animated.timing(scaleAnim, { toValue: 1, duration: 400, useNativeDriver: true }),
+          Animated.timing(scaleAnim, { toValue: 1.08, duration: 400, useNativeDriver: Platform.OS !== 'web' }),
+          Animated.timing(scaleAnim, { toValue: 1, duration: 400, useNativeDriver: Platform.OS !== 'web' }),
         ])
       ).start();
     }

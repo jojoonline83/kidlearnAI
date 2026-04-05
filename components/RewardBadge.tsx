@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { View, Text, Animated, StyleSheet, Pressable } from 'react-native';
+import { View, Text, Animated, StyleSheet, Pressable, Platform } from 'react-native';
 import { Colors } from '@/constants/Colors';
 import { Badge } from '@/constants/rewardsData';
 
@@ -20,7 +20,7 @@ export default function RewardBadge({ badge, earned, onPress, showTitle = true }
         toValue: 1,
         tension: 80,
         friction: 5,
-        useNativeDriver: true,
+        useNativeDriver: Platform.OS !== 'web',
       }).start();
     } else {
       scaleAnim.setValue(1);
@@ -30,9 +30,9 @@ export default function RewardBadge({ badge, earned, onPress, showTitle = true }
   const handlePress = () => {
     if (earned) {
       Animated.sequence([
-        Animated.timing(rotateAnim, { toValue: 1, duration: 200, useNativeDriver: true }),
-        Animated.timing(rotateAnim, { toValue: -1, duration: 200, useNativeDriver: true }),
-        Animated.spring(rotateAnim, { toValue: 0, useNativeDriver: true }),
+        Animated.timing(rotateAnim, { toValue: 1, duration: 200, useNativeDriver: Platform.OS !== 'web' }),
+        Animated.timing(rotateAnim, { toValue: -1, duration: 200, useNativeDriver: Platform.OS !== 'web' }),
+        Animated.spring(rotateAnim, { toValue: 0, useNativeDriver: Platform.OS !== 'web' }),
       ]).start();
     }
     onPress?.();

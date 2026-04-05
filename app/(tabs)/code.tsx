@@ -36,8 +36,8 @@ function ChallengeCard({ challenge, completed, onStart, index }: ChallengeCardPr
   useEffect(() => {
     if (isWeb) return;
     Animated.parallel([
-      Animated.timing(slideAnim, { toValue: 0, duration: 350, delay: index * 80, useNativeDriver: true }),
-      Animated.timing(opacityAnim, { toValue: 1, duration: 350, delay: index * 80, useNativeDriver: true }),
+      Animated.timing(slideAnim, { toValue: 0, duration: 350, delay: index * 80, useNativeDriver: Platform.OS !== 'web' }),
+      Animated.timing(opacityAnim, { toValue: 1, duration: 350, delay: index * 80, useNativeDriver: Platform.OS !== 'web' }),
     ]).start();
   }, []);
 
@@ -45,8 +45,8 @@ function ChallengeCard({ challenge, completed, onStart, index }: ChallengeCardPr
     <Animated.View style={{ transform: [{ translateY: slideAnim }, { scale: scaleAnim }], opacity: opacityAnim }}>
       <Pressable
         onPress={onStart}
-        onPressIn={() => Animated.spring(scaleAnim, { toValue: 0.97, useNativeDriver: true }).start()}
-        onPressOut={() => Animated.spring(scaleAnim, { toValue: 1, useNativeDriver: true }).start()}
+        onPressIn={() => Animated.spring(scaleAnim, { toValue: 0.97, useNativeDriver: Platform.OS !== 'web' }).start()}
+        onPressOut={() => Animated.spring(scaleAnim, { toValue: 1, useNativeDriver: Platform.OS !== 'web' }).start()}
       >
         <LinearGradient
           colors={[challenge.color, challenge.color + 'BB']}
@@ -96,8 +96,8 @@ function CodeBlockItem({ block, onPress, isInSequence = false, index }: CodeBloc
 
   const handlePress = () => {
     Animated.sequence([
-      Animated.timing(scaleAnim, { toValue: 0.9, duration: 80, useNativeDriver: true }),
-      Animated.spring(scaleAnim, { toValue: 1, useNativeDriver: true }),
+      Animated.timing(scaleAnim, { toValue: 0.9, duration: 80, useNativeDriver: Platform.OS !== 'web' }),
+      Animated.spring(scaleAnim, { toValue: 1, useNativeDriver: Platform.OS !== 'web' }),
     ]).start();
     onPress();
   };
@@ -376,7 +376,7 @@ export default function CodeScreen() {
     <SafeAreaView style={styles.safeArea}>
       <ConfettiEffect active={showConfetti} />
 
-      <Modal visible={!!activeChallenge} animationType="slide" presentationStyle="pageSheet">
+      <Modal visible={!!activeChallenge} animationType="slide">
         {activeChallenge && (
           <ChallengePlayer
             challenge={activeChallenge}

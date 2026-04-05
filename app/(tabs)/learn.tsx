@@ -37,8 +37,8 @@ function LessonCard({ lesson, completed, onStart, index }: LessonCardProps) {
   React.useEffect(() => {
     if (isWeb) return;
     Animated.parallel([
-      Animated.timing(slideAnim, { toValue: 0, duration: 400, delay: index * 80, useNativeDriver: true }),
-      Animated.timing(opacityAnim, { toValue: 1, duration: 400, delay: index * 80, useNativeDriver: true }),
+      Animated.timing(slideAnim, { toValue: 0, duration: 400, delay: index * 80, useNativeDriver: Platform.OS !== 'web' }),
+      Animated.timing(opacityAnim, { toValue: 1, duration: 400, delay: index * 80, useNativeDriver: Platform.OS !== 'web' }),
     ]).start();
   }, []);
 
@@ -46,8 +46,8 @@ function LessonCard({ lesson, completed, onStart, index }: LessonCardProps) {
     <Animated.View style={{ transform: [{ translateY: slideAnim }, { scale: scaleAnim }], opacity: opacityAnim }}>
       <Pressable
         onPress={onStart}
-        onPressIn={() => Animated.spring(scaleAnim, { toValue: 0.97, useNativeDriver: true }).start()}
-        onPressOut={() => Animated.spring(scaleAnim, { toValue: 1, useNativeDriver: true }).start()}
+        onPressIn={() => Animated.spring(scaleAnim, { toValue: 0.97, useNativeDriver: Platform.OS !== 'web' }).start()}
+        onPressOut={() => Animated.spring(scaleAnim, { toValue: 1, useNativeDriver: Platform.OS !== 'web' }).start()}
       >
         <LinearGradient
           colors={[lesson.color, lesson.color + 'BB']}
@@ -107,20 +107,20 @@ function LessonViewer({ lesson, onComplete, onClose }: LessonViewerProps) {
     }
     // Slide out current
     Animated.sequence([
-      Animated.timing(slideAnim, { toValue: -width, duration: 200, useNativeDriver: true }),
+      Animated.timing(slideAnim, { toValue: -width, duration: 200, useNativeDriver: Platform.OS !== 'web' }),
     ]).start(() => {
       setCurrentPage((p) => p + 1);
       slideAnim.setValue(width);
-      Animated.spring(slideAnim, { toValue: 0, tension: 80, friction: 10, useNativeDriver: true }).start();
+      Animated.spring(slideAnim, { toValue: 0, tension: 80, friction: 10, useNativeDriver: Platform.OS !== 'web' }).start();
     });
   };
 
   const goPrev = () => {
     if (currentPage === 0) return;
-    Animated.timing(slideAnim, { toValue: width, duration: 200, useNativeDriver: true }).start(() => {
+    Animated.timing(slideAnim, { toValue: width, duration: 200, useNativeDriver: Platform.OS !== 'web' }).start(() => {
       setCurrentPage((p) => p - 1);
       slideAnim.setValue(-width);
-      Animated.spring(slideAnim, { toValue: 0, tension: 80, friction: 10, useNativeDriver: true }).start();
+      Animated.spring(slideAnim, { toValue: 0, tension: 80, friction: 10, useNativeDriver: Platform.OS !== 'web' }).start();
     });
   };
 
@@ -222,7 +222,7 @@ export default function LearnScreen() {
       <ConfettiEffect active={showConfetti} />
 
       {/* Modal for lesson viewer */}
-      <Modal visible={!!selectedLesson} animationType="slide" presentationStyle="pageSheet">
+      <Modal visible={!!selectedLesson} animationType="slide">
         {selectedLesson && (
           <LessonViewer
             lesson={selectedLesson}

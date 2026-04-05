@@ -70,8 +70,8 @@ export default function RewardsScreen() {
   useEffect(() => {
     if (isWeb) return;
     Animated.parallel([
-      Animated.timing(headerAnim, { toValue: 1, duration: 600, useNativeDriver: true }),
-      Animated.spring(headerScale, { toValue: 1, tension: 80, friction: 8, useNativeDriver: true }),
+      Animated.timing(headerAnim, { toValue: 1, duration: 600, useNativeDriver: Platform.OS !== 'web' }),
+      Animated.spring(headerScale, { toValue: 1, tension: 80, friction: 8, useNativeDriver: Platform.OS !== 'web' }),
     ]).start();
   }, []);
 

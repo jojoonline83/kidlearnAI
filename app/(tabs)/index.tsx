@@ -41,15 +41,15 @@ function NavCard({ emoji, title, subtitle, color, gradientEnd, progress, onPress
   useEffect(() => {
     if (isWeb) return;
     Animated.parallel([
-      Animated.timing(slideAnim, { toValue: 0, duration: 400, delay, useNativeDriver: true }),
-      Animated.timing(opacityAnim, { toValue: 1, duration: 400, delay, useNativeDriver: true }),
+      Animated.timing(slideAnim, { toValue: 0, duration: 400, delay, useNativeDriver: Platform.OS !== 'web' }),
+      Animated.timing(opacityAnim, { toValue: 1, duration: 400, delay, useNativeDriver: Platform.OS !== 'web' }),
     ]).start();
   }, []);
 
   const handlePressIn = () =>
-    Animated.spring(scaleAnim, { toValue: 0.96, useNativeDriver: true }).start();
+    Animated.spring(scaleAnim, { toValue: 0.96, useNativeDriver: Platform.OS !== 'web' }).start();
   const handlePressOut = () =>
-    Animated.spring(scaleAnim, { toValue: 1, useNativeDriver: true }).start();
+    Animated.spring(scaleAnim, { toValue: 1, useNativeDriver: Platform.OS !== 'web' }).start();
 
   return (
     <Animated.View
@@ -97,8 +97,8 @@ export default function HomeScreen() {
   useEffect(() => {
     if (isWeb) return;
     Animated.parallel([
-      Animated.spring(headerScale, { toValue: 1, tension: 80, friction: 8, useNativeDriver: true }),
-      Animated.timing(headerOpacity, { toValue: 1, duration: 500, useNativeDriver: true }),
+      Animated.spring(headerScale, { toValue: 1, tension: 80, friction: 8, useNativeDriver: Platform.OS !== 'web' }),
+      Animated.timing(headerOpacity, { toValue: 1, duration: 500, useNativeDriver: Platform.OS !== 'web' }),
     ]).start();
   }, []);
 

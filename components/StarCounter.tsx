@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { View, Text, Animated, StyleSheet } from 'react-native';
+import { View, Text, Animated, StyleSheet, Platform } from 'react-native';
 import { Colors } from '@/constants/Colors';
 
 interface StarCounterProps {
@@ -21,8 +21,8 @@ export default function StarCounter({
   useEffect(() => {
     if (animate && count > prevCount.current) {
       Animated.sequence([
-        Animated.timing(scaleAnim, { toValue: 1.4, duration: 200, useNativeDriver: true }),
-        Animated.spring(scaleAnim, { toValue: 1, useNativeDriver: true }),
+        Animated.timing(scaleAnim, { toValue: 1.4, duration: 200, useNativeDriver: Platform.OS !== 'web' }),
+        Animated.spring(scaleAnim, { toValue: 1, useNativeDriver: Platform.OS !== 'web' }),
       ]).start();
     }
     prevCount.current = count;

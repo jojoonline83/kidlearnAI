@@ -34,8 +34,8 @@ function QuizLevelCard({ level, completed, onStart, index }: QuizLevelCardProps)
   useEffect(() => {
     if (isWeb) return;
     Animated.parallel([
-      Animated.timing(slideAnim, { toValue: 0, duration: 350, delay: index * 80, useNativeDriver: true }),
-      Animated.timing(opacityAnim, { toValue: 1, duration: 350, delay: index * 80, useNativeDriver: true }),
+      Animated.timing(slideAnim, { toValue: 0, duration: 350, delay: index * 80, useNativeDriver: Platform.OS !== 'web' }),
+      Animated.timing(opacityAnim, { toValue: 1, duration: 350, delay: index * 80, useNativeDriver: Platform.OS !== 'web' }),
     ]).start();
   }, []);
 
@@ -43,8 +43,8 @@ function QuizLevelCard({ level, completed, onStart, index }: QuizLevelCardProps)
     <Animated.View style={{ transform: [{ translateY: slideAnim }, { scale: scaleAnim }], opacity: opacityAnim }}>
       <Pressable
         onPress={onStart}
-        onPressIn={() => Animated.spring(scaleAnim, { toValue: 0.97, useNativeDriver: true }).start()}
-        onPressOut={() => Animated.spring(scaleAnim, { toValue: 1, useNativeDriver: true }).start()}
+        onPressIn={() => Animated.spring(scaleAnim, { toValue: 0.97, useNativeDriver: Platform.OS !== 'web' }).start()}
+        onPressOut={() => Animated.spring(scaleAnim, { toValue: 1, useNativeDriver: Platform.OS !== 'web' }).start()}
       >
         <View style={[styles.levelCard, { borderLeftColor: level.color, borderLeftWidth: 6 }]}>
           <View style={[styles.levelIconBox, { backgroundColor: level.color + '22' }]}>
@@ -104,17 +104,17 @@ function QuizPlayer({ level, onComplete, onClose }: QuizPlayerProps) {
     if (correct) {
       setScore((s) => s + 1);
       Animated.sequence([
-        Animated.timing(successScale, { toValue: 1.08, duration: 150, useNativeDriver: true }),
-        Animated.spring(successScale, { toValue: 1, useNativeDriver: true }),
+        Animated.timing(successScale, { toValue: 1.08, duration: 150, useNativeDriver: Platform.OS !== 'web' }),
+        Animated.spring(successScale, { toValue: 1, useNativeDriver: Platform.OS !== 'web' }),
       ]).start();
     } else {
       setWrongCount((w) => w + 1);
       Animated.sequence([
-        Animated.timing(shakeAnim, { toValue: 8, duration: 60, useNativeDriver: true }),
-        Animated.timing(shakeAnim, { toValue: -8, duration: 60, useNativeDriver: true }),
-        Animated.timing(shakeAnim, { toValue: 6, duration: 60, useNativeDriver: true }),
-        Animated.timing(shakeAnim, { toValue: -6, duration: 60, useNativeDriver: true }),
-        Animated.timing(shakeAnim, { toValue: 0, duration: 60, useNativeDriver: true }),
+        Animated.timing(shakeAnim, { toValue: 8, duration: 60, useNativeDriver: Platform.OS !== 'web' }),
+        Animated.timing(shakeAnim, { toValue: -8, duration: 60, useNativeDriver: Platform.OS !== 'web' }),
+        Animated.timing(shakeAnim, { toValue: 6, duration: 60, useNativeDriver: Platform.OS !== 'web' }),
+        Animated.timing(shakeAnim, { toValue: -6, duration: 60, useNativeDriver: Platform.OS !== 'web' }),
+        Animated.timing(shakeAnim, { toValue: 0, duration: 60, useNativeDriver: Platform.OS !== 'web' }),
       ]).start();
     }
   };
@@ -294,7 +294,7 @@ export default function QuizScreen() {
     <SafeAreaView style={styles.safeArea}>
       <ConfettiEffect active={showConfetti} />
 
-      <Modal visible={!!activeLevel} animationType="slide" presentationStyle="pageSheet">
+      <Modal visible={!!activeLevel} animationType="slide">
         {activeLevel && (
           <QuizPlayer level={activeLevel} onComplete={handleComplete} onClose={() => setActiveLevel(null)} />
         )}
