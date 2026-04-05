@@ -29,16 +29,16 @@ interface LessonCardProps {
 }
 
 function LessonCard({ lesson, completed, onStart, index }: LessonCardProps) {
-  const isWeb = Platform.OS === 'web';
   const scaleAnim = useRef(new Animated.Value(1)).current;
-  const slideAnim = useRef(new Animated.Value(isWeb ? 0 : 50)).current;
-  const opacityAnim = useRef(new Animated.Value(isWeb ? 1 : 0)).current;
+  const slideAnim = useRef(new Animated.Value(0)).current;
+  const opacityAnim = useRef(new Animated.Value(1)).current;
 
   React.useEffect(() => {
-    if (isWeb) return;
+    if (Platform.OS !== 'ios' && Platform.OS !== 'android') return;
+    slideAnim.setValue(50); opacityAnim.setValue(0);
     Animated.parallel([
-      Animated.timing(slideAnim, { toValue: 0, duration: 400, delay: index * 80, useNativeDriver: Platform.OS !== 'web' }),
-      Animated.timing(opacityAnim, { toValue: 1, duration: 400, delay: index * 80, useNativeDriver: Platform.OS !== 'web' }),
+      Animated.timing(slideAnim, { toValue: 0, duration: 400, delay: index * 80, useNativeDriver: true }),
+      Animated.timing(opacityAnim, { toValue: 1, duration: 400, delay: index * 80, useNativeDriver: true }),
     ]).start();
   }, []);
 
@@ -75,21 +75,15 @@ function LessonCard({ lesson, completed, onStart, index }: LessonCardProps) {
     </LinearGradient>
   );
 
-  if (isWeb) {
-    return <Tap onPress={onStart}>{cardInner}</Tap>;
+  const tap = <Tap onPress={onStart}>{cardInner}</Tap>;
+  if (Platform.OS === 'ios' || Platform.OS === 'android') {
+    return (
+      <Animated.View style={{ transform: [{ translateY: slideAnim }, { scale: scaleAnim }], opacity: opacityAnim }}>
+        {tap}
+      </Animated.View>
+    );
   }
-
-  return (
-    <Animated.View style={{ transform: [{ translateY: slideAnim }, { scale: scaleAnim }], opacity: opacityAnim }}>
-      <Pressable
-        onPress={onStart}
-        onPressIn={() => Animated.spring(scaleAnim, { toValue: 0.97, useNativeDriver: true }).start()}
-        onPressOut={() => Animated.spring(scaleAnim, { toValue: 1, useNativeDriver: true }).start()}
-      >
-        {cardInner}
-      </Pressable>
-    </Animated.View>
-  );
+  return tap;
 }
 
 interface LessonViewerProps {
