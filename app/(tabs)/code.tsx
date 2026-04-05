@@ -18,6 +18,7 @@ import { useGameStore } from '@/store/gameStore';
 import MascotCharacter from '@/components/MascotCharacter';
 import ProgressBar from '@/components/ProgressBar';
 import ConfettiEffect from '@/components/ConfettiEffect';
+import { Tap } from '@/components/Tap';
 
 // ── Challenge Card ──────────────────────────────────────────────────
 interface ChallengeCardProps {
@@ -76,9 +77,9 @@ function ChallengeCard({ challenge, completed, onStart, index }: ChallengeCardPr
 
   if (isWeb) {
     return (
-      <Pressable onPress={onStart} style={{ cursor: 'pointer' } as any}>
+      <View onClick={onStart as any} style={{ cursor: 'pointer' } as any}>
         {cardInner}
-      </Pressable>
+      </View>
     );
   }
 
@@ -115,7 +116,7 @@ function CodeBlockItem({ block, onPress, isInSequence = false, index }: CodeBloc
   };
 
   return (
-    <Pressable onPress={handlePress} style={{ cursor: 'pointer' } as any}>
+    <Tap onPress={handlePress}>
       <Animated.View
         style={[
           styles.codeBlock,
@@ -136,7 +137,7 @@ function CodeBlockItem({ block, onPress, isInSequence = false, index }: CodeBloc
           </View>
         )}
       </Animated.View>
-    </Pressable>
+    </Tap>
   );
 }
 
@@ -242,13 +243,13 @@ function ChallengePlayer({ challenge, onComplete, onClose }: ChallengePlayerProp
     <View style={styles.player}>
       {/* Header */}
       <LinearGradient colors={[challenge.color, challenge.color + 'BB']} style={styles.playerHeader}>
-        <Pressable onPress={onClose} style={styles.closeButton}>
+        <Tap onPress={onClose} style={styles.closeButton}>
           <Text style={styles.closeButtonText}>✕</Text>
-        </Pressable>
+        </Tap>
         <Text style={styles.playerTitle}>{challenge.title}</Text>
-        <Pressable onPress={() => setShowHint(!showHint)} style={styles.hintButton}>
+        <Tap onPress={() => setShowHint(!showHint)} style={styles.hintButton}>
           <Text style={styles.hintButtonText}>💡</Text>
-        </Pressable>
+        </Tap>
       </LinearGradient>
 
       <ScrollView contentContainerStyle={styles.playerContent} showsVerticalScrollIndicator={false}>
@@ -302,9 +303,9 @@ function ChallengePlayer({ challenge, onComplete, onClose }: ChallengePlayerProp
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionLabel}>📋 Your Program ({sequence.length}/{MAX_BLOCKS})</Text>
             {sequence.length > 0 && (
-              <Pressable onPress={clearSequence} style={styles.clearButton}>
+              <Tap onPress={clearSequence} style={styles.clearButton}>
                 <Text style={styles.clearButtonText}>Clear</Text>
-              </Pressable>
+              </Tap>
             )}
           </View>
 
@@ -342,7 +343,7 @@ function ChallengePlayer({ challenge, onComplete, onClose }: ChallengePlayerProp
         </View>
 
         {/* Run Button */}
-        <Pressable
+        <Tap
           onPress={runProgram}
           style={[
             styles.runButton,
@@ -354,7 +355,7 @@ function ChallengePlayer({ challenge, onComplete, onClose }: ChallengePlayerProp
           <Text style={styles.runButtonText}>
             {isRunning ? '⚙️ Running...' : '▶ Run Program!'}
           </Text>
-        </Pressable>
+        </Tap>
 
         <View style={{ height: 30 }} />
       </ScrollView>

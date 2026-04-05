@@ -17,6 +17,7 @@ import { useGameStore } from '@/store/gameStore';
 import MascotCharacter from '@/components/MascotCharacter';
 import ProgressBar from '@/components/ProgressBar';
 import ConfettiEffect from '@/components/ConfettiEffect';
+import { Tap } from '@/components/Tap';
 
 interface QuizLevelCardProps {
   level: QuizLevel;
@@ -68,9 +69,9 @@ function QuizLevelCard({ level, completed, onStart, index }: QuizLevelCardProps)
 
   if (isWeb) {
     return (
-      <Pressable onPress={onStart} style={{ cursor: 'pointer' } as any}>
+      <View onClick={onStart as any} style={{ cursor: 'pointer' } as any}>
         {cardInner}
-      </Pressable>
+      </View>
     );
   }
 
@@ -167,9 +168,9 @@ function QuizPlayer({ level, onComplete, onClose }: QuizPlayerProps) {
     return (
       <View style={styles.quizPlayer}>
         <LinearGradient colors={[level.color, level.color + 'BB']} style={styles.finishedHeader}>
-          <Pressable onPress={onClose} style={styles.closeButton}>
+          <Tap onPress={onClose} style={styles.closeButton}>
             <Text style={styles.closeButtonText}>✕</Text>
-          </Pressable>
+          </Tap>
           <Text style={styles.finishedHeaderTitle}>Quiz Complete!</Text>
         </LinearGradient>
         <View style={styles.finishedContent}>
@@ -191,12 +192,12 @@ function QuizPlayer({ level, onComplete, onClose }: QuizPlayerProps) {
               ⭐ +{Math.round((score / level.questions.length) * level.starsReward)} stars earned!
             </Text>
           )}
-          <Pressable
+          <Tap
             onPress={() => onComplete(score)}
             style={[styles.finishButton, { backgroundColor: level.color }]}
           >
             <Text style={styles.finishButtonText}>Collect Stars! 🎉</Text>
-          </Pressable>
+          </Tap>
         </View>
       </View>
     );
@@ -206,9 +207,9 @@ function QuizPlayer({ level, onComplete, onClose }: QuizPlayerProps) {
     <View style={styles.quizPlayer}>
       {/* Header */}
       <LinearGradient colors={[level.color, level.color + 'BB']} style={styles.playerHeader}>
-        <Pressable onPress={onClose} style={styles.closeButton}>
+        <Tap onPress={onClose} style={styles.closeButton}>
           <Text style={styles.closeButtonText}>✕</Text>
-        </Pressable>
+        </Tap>
         <Text style={styles.playerHeaderTitle}>{level.title}</Text>
         <Text style={styles.questionCounter}>
           {currentQ + 1}/{level.questions.length}
@@ -238,14 +239,14 @@ function QuizPlayer({ level, onComplete, onClose }: QuizPlayerProps) {
         {/* Options */}
         <View style={styles.optionsContainer}>
           {question.options.map((option, idx) => (
-            <Pressable key={idx} onPress={() => handleAnswer(idx)} style={[getOptionStyle(idx), { cursor: 'pointer' } as any]} disabled={showFeedback}>
+            <Tap key={idx} onPress={() => handleAnswer(idx)} style={getOptionStyle(idx)} disabled={showFeedback}>
               <View style={styles.optionIndex}>
                 <Text style={styles.optionIndexText}>
                   {showFeedback && idx === question.correct ? '✅' : showFeedback && idx === selectedAnswer ? '❌' : String.fromCharCode(65 + idx)}
                 </Text>
               </View>
               <Text style={getOptionTextStyle(idx)} numberOfLines={2}>{option}</Text>
-            </Pressable>
+            </Tap>
           ))}
         </View>
 
@@ -268,12 +269,12 @@ function QuizPlayer({ level, onComplete, onClose }: QuizPlayerProps) {
         )}
 
         {showFeedback && (
-          <Pressable
+          <Tap
             onPress={handleNext}
             style={[styles.nextButton, { backgroundColor: level.color }]}
           >
             <Text style={styles.nextButtonText}>{isLast ? '🏁 See Results!' : 'Next Question →'}</Text>
-          </Pressable>
+          </Tap>
         )}
 
         <View style={{ height: 20 }} />

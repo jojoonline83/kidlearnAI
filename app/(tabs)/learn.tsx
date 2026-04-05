@@ -18,6 +18,7 @@ import { useGameStore } from '@/store/gameStore';
 import MascotCharacter from '@/components/MascotCharacter';
 import ProgressBar from '@/components/ProgressBar';
 import ConfettiEffect from '@/components/ConfettiEffect';
+import { Tap } from '@/components/Tap';
 
 const { width } = Dimensions.get('window');
 
@@ -77,9 +78,9 @@ function LessonCard({ lesson, completed, onStart, index }: LessonCardProps) {
 
   if (isWeb) {
     return (
-      <Pressable onPress={onStart} style={{ cursor: 'pointer' } as any}>
+      <View onClick={onStart as any} style={{ cursor: 'pointer' } as any}>
         {cardInner}
-      </Pressable>
+      </View>
     );
   }
 
@@ -142,9 +143,9 @@ function LessonViewer({ lesson, onComplete, onClose }: LessonViewerProps) {
     <View style={styles.lessonViewer}>
       {/* Header */}
       <LinearGradient colors={[lesson.color, lesson.color + 'BB']} style={styles.viewerHeader}>
-        <Pressable onPress={onClose} style={styles.closeButton}>
+        <Tap onPress={onClose} style={styles.closeButton}>
           <Text style={styles.closeButtonText}>✕</Text>
-        </Pressable>
+        </Tap>
         <Text style={styles.viewerTitle}>{lesson.title}</Text>
         <View style={styles.pageIndicator}>
           <Text style={styles.pageIndicatorText}>
@@ -178,13 +179,13 @@ function LessonViewer({ lesson, onComplete, onClose }: LessonViewerProps) {
 
       {/* Navigation buttons */}
       <View style={styles.navButtons}>
-        <Pressable
+        <Tap
           onPress={goPrev}
           style={[styles.navButton, styles.navButtonBack, currentPage === 0 && styles.navButtonDisabled]}
           disabled={currentPage === 0}
         >
           <Text style={styles.navButtonText}>← Back</Text>
-        </Pressable>
+        </Tap>
         <View style={styles.dotIndicators}>
           {lesson.pages.map((_, i) => (
             <View
@@ -198,9 +199,9 @@ function LessonViewer({ lesson, onComplete, onClose }: LessonViewerProps) {
             />
           ))}
         </View>
-        <Pressable onPress={goNext} style={[styles.navButton, { backgroundColor: lesson.color }]}>
+        <Tap onPress={goNext} style={[styles.navButton, { backgroundColor: lesson.color }]}>
           <Text style={styles.navButtonText}>{isLast ? '🎉 Finish!' : 'Next →'}</Text>
-        </Pressable>
+        </Tap>
       </View>
     </View>
   );
