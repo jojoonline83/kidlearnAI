@@ -42,44 +42,55 @@ function LessonCard({ lesson, completed, onStart, index }: LessonCardProps) {
     ]).start();
   }, []);
 
+  const cardInner = (
+    <LinearGradient
+      colors={[lesson.color, lesson.color + 'BB']}
+      style={styles.lessonCard}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+    >
+      <View style={styles.lessonCardLeft}>
+        <Text style={styles.lessonEmoji}>{lesson.emoji}</Text>
+      </View>
+      <View style={styles.lessonCardContent}>
+        <Text style={styles.lessonTitle}>{lesson.title}</Text>
+        <Text style={styles.lessonSubtitle}>{lesson.subtitle}</Text>
+        <View style={styles.lessonMeta}>
+          <Text style={styles.lessonPages}>{lesson.pages.length} pages</Text>
+          <Text style={styles.lessonStars}>⭐ {lesson.stars} stars</Text>
+        </View>
+      </View>
+      <View style={styles.lessonCardRight}>
+        {completed ? (
+          <View style={styles.completedBadge}>
+            <Text style={styles.completedText}>✅</Text>
+            <Text style={styles.doneText}>Done!</Text>
+          </View>
+        ) : (
+          <View style={styles.startButton}>
+            <Text style={styles.startButtonText}>▶</Text>
+          </View>
+        )}
+      </View>
+    </LinearGradient>
+  );
+
+  if (isWeb) {
+    return (
+      <Pressable onPress={onStart} style={{ cursor: 'pointer' } as any}>
+        {cardInner}
+      </Pressable>
+    );
+  }
+
   return (
     <Animated.View style={{ transform: [{ translateY: slideAnim }, { scale: scaleAnim }], opacity: opacityAnim }}>
       <Pressable
         onPress={onStart}
-        onPressIn={() => Animated.spring(scaleAnim, { toValue: 0.97, useNativeDriver: Platform.OS !== 'web' }).start()}
-        onPressOut={() => Animated.spring(scaleAnim, { toValue: 1, useNativeDriver: Platform.OS !== 'web' }).start()}
-        style={{ cursor: 'pointer' } as any}
+        onPressIn={() => Animated.spring(scaleAnim, { toValue: 0.97, useNativeDriver: true }).start()}
+        onPressOut={() => Animated.spring(scaleAnim, { toValue: 1, useNativeDriver: true }).start()}
       >
-        <LinearGradient
-          colors={[lesson.color, lesson.color + 'BB']}
-          style={styles.lessonCard}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-        >
-          <View style={styles.lessonCardLeft}>
-            <Text style={styles.lessonEmoji}>{lesson.emoji}</Text>
-          </View>
-          <View style={styles.lessonCardContent}>
-            <Text style={styles.lessonTitle}>{lesson.title}</Text>
-            <Text style={styles.lessonSubtitle}>{lesson.subtitle}</Text>
-            <View style={styles.lessonMeta}>
-              <Text style={styles.lessonPages}>{lesson.pages.length} pages</Text>
-              <Text style={styles.lessonStars}>⭐ {lesson.stars} stars</Text>
-            </View>
-          </View>
-          <View style={styles.lessonCardRight}>
-            {completed ? (
-              <View style={styles.completedBadge}>
-                <Text style={styles.completedText}>✅</Text>
-                <Text style={styles.doneText}>Done!</Text>
-              </View>
-            ) : (
-              <View style={styles.startButton}>
-                <Text style={styles.startButtonText}>▶</Text>
-              </View>
-            )}
-          </View>
-        </LinearGradient>
+        {cardInner}
       </Pressable>
     </Animated.View>
   );

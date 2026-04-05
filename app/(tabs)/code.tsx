@@ -41,44 +41,55 @@ function ChallengeCard({ challenge, completed, onStart, index }: ChallengeCardPr
     ]).start();
   }, []);
 
+  const cardInner = (
+    <LinearGradient
+      colors={[challenge.color, challenge.color + 'BB']}
+      style={styles.challengeCard}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+    >
+      <View style={styles.challengeCardHeader}>
+        <Text style={styles.challengeEmoji}>{challenge.emoji}</Text>
+        <View style={styles.challengeInfo}>
+          <Text style={styles.challengeTitle}>{challenge.title}</Text>
+          <Text style={styles.challengeGoal}>{challenge.goal}</Text>
+        </View>
+        <View style={styles.challengeRight}>
+          {completed ? (
+            <View style={styles.doneBox}>
+              <Text style={styles.doneEmoji}>✅</Text>
+              <Text style={styles.doneText}>Done!</Text>
+            </View>
+          ) : (
+            <View style={styles.codeButton}>
+              <Text style={styles.codeButtonText}>Code!</Text>
+            </View>
+          )}
+        </View>
+      </View>
+      <View style={styles.storyBox}>
+        <Text style={styles.storyText} numberOfLines={2}>{challenge.story}</Text>
+      </View>
+      <Text style={styles.challengeStars}>⭐ {challenge.stars} stars</Text>
+    </LinearGradient>
+  );
+
+  if (isWeb) {
+    return (
+      <Pressable onPress={onStart} style={{ cursor: 'pointer' } as any}>
+        {cardInner}
+      </Pressable>
+    );
+  }
+
   return (
     <Animated.View style={{ transform: [{ translateY: slideAnim }, { scale: scaleAnim }], opacity: opacityAnim }}>
       <Pressable
         onPress={onStart}
-        onPressIn={() => Animated.spring(scaleAnim, { toValue: 0.97, useNativeDriver: Platform.OS !== 'web' }).start()}
-        onPressOut={() => Animated.spring(scaleAnim, { toValue: 1, useNativeDriver: Platform.OS !== 'web' }).start()}
-        style={{ cursor: 'pointer' } as any}
+        onPressIn={() => Animated.spring(scaleAnim, { toValue: 0.97, useNativeDriver: true }).start()}
+        onPressOut={() => Animated.spring(scaleAnim, { toValue: 1, useNativeDriver: true }).start()}
       >
-        <LinearGradient
-          colors={[challenge.color, challenge.color + 'BB']}
-          style={styles.challengeCard}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-        >
-          <View style={styles.challengeCardHeader}>
-            <Text style={styles.challengeEmoji}>{challenge.emoji}</Text>
-            <View style={styles.challengeInfo}>
-              <Text style={styles.challengeTitle}>{challenge.title}</Text>
-              <Text style={styles.challengeGoal}>{challenge.goal}</Text>
-            </View>
-            <View style={styles.challengeRight}>
-              {completed ? (
-                <View style={styles.doneBox}>
-                  <Text style={styles.doneEmoji}>✅</Text>
-                  <Text style={styles.doneText}>Done!</Text>
-                </View>
-              ) : (
-                <View style={styles.codeButton}>
-                  <Text style={styles.codeButtonText}>Code!</Text>
-                </View>
-              )}
-            </View>
-          </View>
-          <View style={styles.storyBox}>
-            <Text style={styles.storyText} numberOfLines={2}>{challenge.story}</Text>
-          </View>
-          <Text style={styles.challengeStars}>⭐ {challenge.stars} stars</Text>
-        </LinearGradient>
+        {cardInner}
       </Pressable>
     </Animated.View>
   );

@@ -39,38 +39,49 @@ function QuizLevelCard({ level, completed, onStart, index }: QuizLevelCardProps)
     ]).start();
   }, []);
 
+  const cardInner = (
+    <View style={[styles.levelCard, { borderLeftColor: level.color, borderLeftWidth: 6 }]}>
+      <View style={[styles.levelIconBox, { backgroundColor: level.color + '22' }]}>
+        <Text style={styles.levelEmoji}>{level.emoji}</Text>
+      </View>
+      <View style={styles.levelInfo}>
+        <Text style={styles.levelTitle}>{level.title}</Text>
+        <Text style={styles.levelMeta}>{level.questions.length} questions</Text>
+        <View style={styles.levelStarsRow}>
+          <Text style={styles.levelStars}>⭐ {level.starsReward} stars to win</Text>
+        </View>
+      </View>
+      <View style={styles.levelAction}>
+        {completed ? (
+          <View style={[styles.completedBadge, { backgroundColor: Colors.green + '22' }]}>
+            <Text style={styles.completedEmoji}>✅</Text>
+            <Text style={[styles.completedText, { color: Colors.green }]}>Done!</Text>
+          </View>
+        ) : (
+          <View style={[styles.playButton, { backgroundColor: level.color }]}>
+            <Text style={styles.playButtonText}>Play!</Text>
+          </View>
+        )}
+      </View>
+    </View>
+  );
+
+  if (isWeb) {
+    return (
+      <Pressable onPress={onStart} style={{ cursor: 'pointer' } as any}>
+        {cardInner}
+      </Pressable>
+    );
+  }
+
   return (
     <Animated.View style={{ transform: [{ translateY: slideAnim }, { scale: scaleAnim }], opacity: opacityAnim }}>
       <Pressable
         onPress={onStart}
-        onPressIn={() => Animated.spring(scaleAnim, { toValue: 0.97, useNativeDriver: Platform.OS !== 'web' }).start()}
-        onPressOut={() => Animated.spring(scaleAnim, { toValue: 1, useNativeDriver: Platform.OS !== 'web' }).start()}
-        style={{ cursor: 'pointer' } as any}
+        onPressIn={() => Animated.spring(scaleAnim, { toValue: 0.97, useNativeDriver: true }).start()}
+        onPressOut={() => Animated.spring(scaleAnim, { toValue: 1, useNativeDriver: true }).start()}
       >
-        <View style={[styles.levelCard, { borderLeftColor: level.color, borderLeftWidth: 6 }]}>
-          <View style={[styles.levelIconBox, { backgroundColor: level.color + '22' }]}>
-            <Text style={styles.levelEmoji}>{level.emoji}</Text>
-          </View>
-          <View style={styles.levelInfo}>
-            <Text style={styles.levelTitle}>{level.title}</Text>
-            <Text style={styles.levelMeta}>{level.questions.length} questions</Text>
-            <View style={styles.levelStarsRow}>
-              <Text style={styles.levelStars}>⭐ {level.starsReward} stars to win</Text>
-            </View>
-          </View>
-          <View style={styles.levelAction}>
-            {completed ? (
-              <View style={[styles.completedBadge, { backgroundColor: Colors.green + '22' }]}>
-                <Text style={styles.completedEmoji}>✅</Text>
-                <Text style={[styles.completedText, { color: Colors.green }]}>Done!</Text>
-              </View>
-            ) : (
-              <View style={[styles.playButton, { backgroundColor: level.color }]}>
-                <Text style={styles.playButtonText}>Play!</Text>
-              </View>
-            )}
-          </View>
-        </View>
+        {cardInner}
       </Pressable>
     </Animated.View>
   );
