@@ -7,7 +7,6 @@ import {
   Pressable,
   Animated,
   SafeAreaView,
-  Modal,
   Dimensions,
   Platform,
 } from 'react-native';
@@ -230,17 +229,6 @@ export default function LearnScreen() {
     <SafeAreaView style={styles.safeArea}>
       <ConfettiEffect active={showConfetti} />
 
-      {/* Modal for lesson viewer */}
-      <Modal visible={!!selectedLesson} animationType="slide">
-        {selectedLesson && (
-          <LessonViewer
-            lesson={selectedLesson}
-            onComplete={handleComplete}
-            onClose={() => setSelectedLesson(null)}
-          />
-        )}
-      </Modal>
-
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
         {/* Header */}
         <LinearGradient colors={['#4ECDC4', '#34B5AC']} style={styles.header}>
@@ -283,6 +271,17 @@ export default function LearnScreen() {
 
         <View style={{ height: 20 }} />
       </ScrollView>
+
+      {/* Inline overlay — more reliable than Modal on web */}
+      {selectedLesson && (
+        <View style={styles.overlay}>
+          <LessonViewer
+            lesson={selectedLesson}
+            onComplete={handleComplete}
+            onClose={() => setSelectedLesson(null)}
+          />
+        </View>
+      )}
     </SafeAreaView>
   );
 }
@@ -290,6 +289,7 @@ export default function LearnScreen() {
 const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: Colors.background },
   container: { flex: 1, backgroundColor: Colors.background },
+  overlay: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: Colors.background, zIndex: 999 },
   header: {
     padding: 24,
     paddingTop: 16,

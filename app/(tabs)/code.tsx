@@ -7,8 +7,6 @@ import {
   Pressable,
   Animated,
   SafeAreaView,
-  Modal,
-  Alert,
   Platform,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -385,16 +383,6 @@ export default function CodeScreen() {
     <SafeAreaView style={styles.safeArea}>
       <ConfettiEffect active={showConfetti} />
 
-      <Modal visible={!!activeChallenge} animationType="slide">
-        {activeChallenge && (
-          <ChallengePlayer
-            challenge={activeChallenge}
-            onComplete={handleComplete}
-            onClose={() => setActiveChallenge(null)}
-          />
-        )}
-      </Modal>
-
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
         {/* Header */}
         <LinearGradient colors={['#FB923C', '#E87520']} style={styles.header}>
@@ -442,6 +430,16 @@ export default function CodeScreen() {
 
         <View style={{ height: 20 }} />
       </ScrollView>
+
+      {activeChallenge && (
+        <View style={styles.overlay}>
+          <ChallengePlayer
+            challenge={activeChallenge}
+            onComplete={handleComplete}
+            onClose={() => setActiveChallenge(null)}
+          />
+        </View>
+      )}
     </SafeAreaView>
   );
 }
@@ -449,6 +447,7 @@ export default function CodeScreen() {
 const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: Colors.background },
   container: { flex: 1, backgroundColor: Colors.background },
+  overlay: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: Colors.background, zIndex: 999 },
   header: { padding: 24, paddingTop: 16, gap: 8 },
   headerTitle: { fontSize: 26, fontWeight: '800', color: Colors.white },
   headerSubtitle: { fontSize: 15, color: Colors.white + 'DD', fontWeight: '500' },

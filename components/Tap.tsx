@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { View, Pressable, Platform } from 'react-native';
 
 interface TapProps {
@@ -12,34 +12,41 @@ interface TapProps {
 
 /**
  * Cross-platform pressable.
- * On web: renders as <a href="#"> — a native browser interactive element
- *   that fires onClick reliably on ALL mobile browsers without any
- *   gesture system interference.
- * On native: renders as Pressable.
+ * On web: uses both onTouchEnd (mobile) and onClick (desktop) on a View,
+ *   with debounce to prevent double-fire. touch-action:manipulation disables
+ *   scroll-gesture detection so taps fire immediately.
+ * On native: Pressable.
  */
 export function Tap({ onPress, onPressIn, onPressOut, style, children, disabled }: TapProps) {
+  const lastEventTime = useRef(0);
+
   if (Platform.OS === 'web') {
-    const handleClick = (e: any) => {
-      e.preventDefault();
+    const handleInteraction = (e: any) => {
+      if (e && e.preventDefault) e.preventDefault();
+      if (e && e.stopPropagation) e.stopPropagation();
+      const now = Date.now();
+      if (now - lastEventTime.current < 600) return; // debounce double-fire
+      lastEventTime.current = now;
       if (!disabled && onPress) onPress();
     };
 
-    // Use <a href="#"> — works natively on all mobile browsers
-    // Wrap in View if style is provided to preserve RN styling
-    const inner = style
-      ? React.createElement(View, { style }, children)
-      : children;
-
-    return React.createElement('a', {
-      href: '#',
-      onClick: handleClick,
-      style: {
-        display: 'block',
-        textDecoration: 'none',
-        cursor: disabled ? 'not-allowed' : 'pointer',
-        WebkitTapHighlightColor: 'transparent',
-      }
-    }, inner);
+    return (
+      <View
+        onTouchEnd={handleInteraction as any}
+        onClick={handleInteraction as any}
+        style={[
+          {
+            touchAction: 'manipulation',
+            userSelect: 'none',
+            cursor: disabled ? 'default' : 'pointer',
+            WebkitTapHighlightColor: 'transparent',
+          } as any,
+          style,
+        ]}
+      >
+        {children}
+      </View>
+    );
   }
 
   return (
