@@ -68,11 +68,7 @@ function QuizLevelCard({ level, completed, onStart, index }: QuizLevelCardProps)
   );
 
   if (isWeb) {
-    return (
-      <View onClick={onStart as any} style={{ cursor: 'pointer' } as any}>
-        {cardInner}
-      </View>
-    );
+    return <Tap onPress={onStart}>{cardInner}</Tap>;
   }
 
   return (

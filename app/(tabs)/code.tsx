@@ -76,11 +76,7 @@ function ChallengeCard({ challenge, completed, onStart, index }: ChallengeCardPr
   );
 
   if (isWeb) {
-    return (
-      <View onClick={onStart as any} style={{ cursor: 'pointer' } as any}>
-        {cardInner}
-      </View>
-    );
+    return <Tap onPress={onStart}>{cardInner}</Tap>;
   }
 
   return (
