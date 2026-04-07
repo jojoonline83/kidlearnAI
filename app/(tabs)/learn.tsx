@@ -62,17 +62,16 @@ function LessonCard({ lesson, completed, onStart, index }: LessonCardProps) {
     </LinearGradient>
   );
 
-  // On native: use Pressable. On web/SSR: use plain <a> anchor (natively tappable, no JS needed).
-  // Platform.OS is undefined during SSR and 'web' in browser — both are NOT 'ios'/'android'.
-  // So server and client render identical <a> element → no hydration mismatch.
+  // On native: Pressable. On web/SSR: plain div with data-lesson-id.
+  // Platform.OS is undefined on SSR and 'web' in browser — both are NOT ios/android.
+  // Server and client render the same div → no hydration mismatch.
   if (Platform.OS === 'ios' || Platform.OS === 'android') {
     return <Pressable onPress={onStart}>{cardInner}</Pressable>;
   }
-  return React.createElement(
-    'a',
-    { href: `#lesson-${lesson.id}`, style: { textDecoration: 'none', display: 'block' } },
-    cardInner,
-  );
+  return React.createElement('div', {
+    'data-lesson-id': lesson.id,
+    style: { cursor: 'pointer', WebkitTapHighlightColor: 'transparent', touchAction: 'manipulation' },
+  }, cardInner);
 }
 
 interface LessonViewerProps {
@@ -192,20 +191,25 @@ export default function LearnScreen() {
 
   const completedCount = completedLessons.length;
 
-  // Listen to hash changes to open lesson overlay. useEffect is client-only — no SSR risk.
+  // Document-level click listener to open lesson overlay.
+  // useEffect is client-only (never runs on SSR) — no hydration risk.
+  // click events bubble through all DOM elements including RNW Views and ScrollView.
+  // This works regardless of React event system / hydration state.
   useEffect(() => {
-    const handleHashChange = () => {
-      const hash = window.location.hash;
-      if (hash.startsWith('#lesson-')) {
-        const id = hash.slice('#lesson-'.length);
-        const lesson = LESSONS.find(l => l.id === id) ?? null;
-        setSelectedLesson(lesson);
-        // Clear hash immediately so tapping the same card again works
-        window.history.replaceState(null, '', window.location.pathname + window.location.search);
+    const handler = (e: Event) => {
+      // Walk up the DOM tree from the click target to find a data-lesson-id attribute
+      let el = e.target as HTMLElement | null;
+      while (el && el !== document.body) {
+        const id = el.getAttribute?.('data-lesson-id');
+        if (id) {
+          setSelectedLesson(LESSONS.find(l => l.id === id) ?? null);
+          break;
+        }
+        el = el.parentElement;
       }
     };
-    window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
+    document.addEventListener('click', handler);
+    return () => document.removeEventListener('click', handler);
   }, []);
 
   const handleClose = () => setSelectedLesson(null);
