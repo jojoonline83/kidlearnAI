@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -10,7 +10,6 @@ import {
   Dimensions,
   Platform,
 } from 'react-native';
-import { Link, useLocalSearchParams, router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Colors } from '@/constants/Colors';
 import { LESSONS, Lesson, LessonPage } from '@/constants/lessons';
@@ -25,10 +24,11 @@ const { width } = Dimensions.get('window');
 interface LessonCardProps {
   lesson: Lesson;
   completed: boolean;
+  onStart: () => void;
   index: number;
 }
 
-function LessonCard({ lesson, completed, index }: LessonCardProps) {
+function LessonCard({ lesson, completed, onStart, index }: LessonCardProps) {
   const cardInner = (
     <LinearGradient
       colors={[lesson.color, lesson.color + 'BB']}
@@ -62,13 +62,16 @@ function LessonCard({ lesson, completed, index }: LessonCardProps) {
     </LinearGradient>
   );
 
-  return (
-    <Link
-      href={`/(tabs)/learn?lessonId=${lesson.id}` as any}
-      style={{ textDecorationLine: 'none' } as any}
-    >
-      {cardInner}
-    </Link>
+  // On native: use Pressable. On web/SSR: use plain <a> anchor (natively tappable, no JS needed).
+  // Platform.OS is undefined during SSR and 'web' in browser — both are NOT 'ios'/'android'.
+  // So server and client render identical <a> element → no hydration mismatch.
+  if (Platform.OS === 'ios' || Platform.OS === 'android') {
+    return <Pressable onPress={onStart}>{cardInner}</Pressable>;
+  }
+  return React.createElement(
+    'a',
+    { href: `#lesson-${lesson.id}`, style: { textDecoration: 'none', display: 'block' } },
+    cardInner,
   );
 }
 
@@ -184,13 +187,28 @@ function LessonViewer({ lesson, onComplete, onClose }: LessonViewerProps) {
 
 export default function LearnScreen() {
   const { completedLessons, addStars, completeLesson } = useGameStore();
+  const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
   const [showConfetti, setShowConfetti] = useState(false);
-  const { lessonId } = useLocalSearchParams<{ lessonId?: string }>();
-  const selectedLesson = lessonId ? (LESSONS.find(l => l.id === lessonId) ?? null) : null;
 
   const completedCount = completedLessons.length;
 
-  const handleClose = () => router.push('/(tabs)/learn' as any);
+  // Listen to hash changes to open lesson overlay. useEffect is client-only — no SSR risk.
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash;
+      if (hash.startsWith('#lesson-')) {
+        const id = hash.slice('#lesson-'.length);
+        const lesson = LESSONS.find(l => l.id === id) ?? null;
+        setSelectedLesson(lesson);
+        // Clear hash immediately so tapping the same card again works
+        window.history.replaceState(null, '', window.location.pathname + window.location.search);
+      }
+    };
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
+  const handleClose = () => setSelectedLesson(null);
 
   const handleComplete = () => {
     if (!selectedLesson) return;
@@ -199,8 +217,8 @@ export default function LearnScreen() {
       addStars(selectedLesson.stars);
       completeLesson(selectedLesson.id);
     }
-    router.push('/(tabs)/learn' as any);
     setShowConfetti(true);
+    setSelectedLesson(null);
     setTimeout(() => setShowConfetti(false), 2500);
   };
 
@@ -233,6 +251,7 @@ export default function LearnScreen() {
               key={lesson.id}
               lesson={lesson}
               completed={completedLessons.includes(lesson.id)}
+              onStart={() => setSelectedLesson(lesson)}
               index={i}
             />
           ))}
