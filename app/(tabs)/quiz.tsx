@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
@@ -85,6 +85,9 @@ function QuizPlayer({ level, onComplete, onClose }: QuizPlayerProps) {
   const [score, setScore] = useState(0);
   const [finished, setFinished] = useState(false);
   const [wrongCount, setWrongCount] = useState(0);
+  const [collectPressed, setCollectPressed] = useState(false);
+
+  const scrollRef = useRef<ScrollView>(null);
 
   const question = level.questions[currentQ];
   const isLast = currentQ === level.questions.length - 1;
@@ -114,6 +117,10 @@ function QuizPlayer({ level, onComplete, onClose }: QuizPlayerProps) {
         Animated.timing(shakeAnim, { toValue: 0, duration: 60, useNativeDriver: true }),
       ]).start();
     }
+
+    // Scroll down so the feedback + Next button are always visible, even on small screens.
+    // The delay lets React finish the render before we measure the new content height.
+    setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 150);
   };
 
   const handleNext = () => {
@@ -124,6 +131,8 @@ function QuizPlayer({ level, onComplete, onClose }: QuizPlayerProps) {
     setCurrentQ((q) => q + 1);
     setSelectedAnswer(null);
     setShowFeedback(false);
+    // Scroll back to top so the new question header is fully visible.
+    scrollRef.current?.scrollTo({ y: 0, animated: false });
   };
 
   const getOptionStyle = (idx: number) => {
@@ -177,8 +186,12 @@ function QuizPlayer({ level, onComplete, onClose }: QuizPlayerProps) {
             </Text>
           )}
           <Pressable
-            onPress={() => onComplete(score)}
-            style={[styles.finishButton, { backgroundColor: level.color }]}
+            onPress={() => {
+              if (collectPressed) return;
+              setCollectPressed(true);
+              onComplete(score);
+            }}
+            style={[styles.finishButton, { backgroundColor: level.color, opacity: collectPressed ? 0.6 : 1 }]}
           >
             <Text style={styles.finishButtonText}>Collect Stars! 🎉</Text>
           </Pressable>
@@ -205,7 +218,7 @@ function QuizPlayer({ level, onComplete, onClose }: QuizPlayerProps) {
         <ProgressBar progress={(currentQ + 1) / level.questions.length} color={level.color} height={8} />
       </View>
 
-      <ScrollView contentContainerStyle={styles.questionContent}>
+      <ScrollView ref={scrollRef} contentContainerStyle={styles.questionContent}>
         {/* Mascot + score */}
         <View style={styles.questionHeader}>
           <MascotCharacter mood={mascotMood} size="small" animate />
@@ -271,8 +284,18 @@ export default function QuizScreen() {
   const { completedQuizzes, addStars, completeQuiz } = useGameStore();
   const [activeLevel, setActiveLevel] = useState<QuizLevel | null>(null);
   const [showConfetti, setShowConfetti] = useState(false);
+  const confettiTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const completedCount = completedQuizzes.length;
+
+  const closeQuiz = useCallback(() => {
+    if (confettiTimer.current) {
+      clearTimeout(confettiTimer.current);
+      confettiTimer.current = null;
+    }
+    setShowConfetti(false);
+    setActiveLevel(null);
+  }, []);
 
   const handleComplete = (score: number) => {
     if (!activeLevel) return;
@@ -281,10 +304,7 @@ export default function QuizScreen() {
     if (starsEarned > 0) addStars(starsEarned);
     if (!alreadyDone && score > 0) completeQuiz(activeLevel.id);
     setShowConfetti(true);
-    setTimeout(() => {
-      setShowConfetti(false);
-      setActiveLevel(null);
-    }, 2500);
+    confettiTimer.current = setTimeout(closeQuiz, 2500);
   };
 
   return (
@@ -293,7 +313,7 @@ export default function QuizScreen() {
 
       <Modal visible={!!activeLevel} animationType="slide" presentationStyle="pageSheet">
         {activeLevel && (
-          <QuizPlayer level={activeLevel} onComplete={handleComplete} onClose={() => setActiveLevel(null)} />
+          <QuizPlayer level={activeLevel} onComplete={handleComplete} onClose={closeQuiz} />
         )}
       </Modal>
 
