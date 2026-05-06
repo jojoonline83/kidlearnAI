@@ -7,6 +7,7 @@ import {
   Pressable,
   Animated,
   SafeAreaView,
+  Platform,
 } from 'react-native';
 import { router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -33,7 +34,7 @@ interface NavCardProps {
 
 function NavCard({ emoji, title, subtitle, color, gradientEnd, progress, onPress, delay = 0 }: NavCardProps) {
   const slideAnim = useRef(new Animated.Value(40)).current;
-  const opacityAnim = useRef(new Animated.Value(0)).current;
+  const opacityAnim = useRef(new Animated.Value(Platform.OS === 'web' ? 1 : 0)).current;
   const scaleAnim = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
@@ -87,8 +88,8 @@ export default function HomeScreen() {
   const totalActivities = LESSONS.length + QUIZ_LEVELS.length + CODE_CHALLENGES.length;
   const completedActivities = completedLessons.length + completedQuizzes.length + completedChallenges.length;
 
-  const headerScale = useRef(new Animated.Value(0.9)).current;
-  const headerOpacity = useRef(new Animated.Value(0)).current;
+  const headerScale = useRef(new Animated.Value(Platform.OS === 'web' ? 1 : 0.9)).current;
+  const headerOpacity = useRef(new Animated.Value(Platform.OS === 'web' ? 1 : 0)).current;
 
   useEffect(() => {
     Animated.parallel([
