@@ -31,9 +31,13 @@ interface LessonCardProps {
 function LessonCard({ lesson, completed, onStart, index }: LessonCardProps) {
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const slideAnim = useRef(new Animated.Value(50)).current;
-  const opacityAnim = useRef(new Animated.Value(Platform.OS === 'web' ? 1 : 0)).current;
+  const opacityAnim = useRef(new Animated.Value(1)).current;
 
   React.useEffect(() => {
+    if (Platform.OS !== 'web') {
+      opacityAnim.setValue(0);
+      slideAnim.setValue(50);
+    }
     Animated.parallel([
       Animated.timing(slideAnim, { toValue: 0, duration: 400, delay: index * 80, useNativeDriver: true }),
       Animated.timing(opacityAnim, { toValue: 1, duration: 400, delay: index * 80, useNativeDriver: true }),

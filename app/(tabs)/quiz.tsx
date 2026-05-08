@@ -27,10 +27,14 @@ interface QuizLevelCardProps {
 
 function QuizLevelCard({ level, completed, onStart, index }: QuizLevelCardProps) {
   const slideAnim = useRef(new Animated.Value(40)).current;
-  const opacityAnim = useRef(new Animated.Value(Platform.OS === 'web' ? 1 : 0)).current;
+  const opacityAnim = useRef(new Animated.Value(1)).current;
   const scaleAnim = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
+    if (Platform.OS !== 'web') {
+      opacityAnim.setValue(0);
+      slideAnim.setValue(40);
+    }
     Animated.parallel([
       Animated.timing(slideAnim, { toValue: 0, duration: 350, delay: index * 80, useNativeDriver: true }),
       Animated.timing(opacityAnim, { toValue: 1, duration: 350, delay: index * 80, useNativeDriver: true }),

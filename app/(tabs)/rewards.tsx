@@ -63,10 +63,14 @@ export default function RewardsScreen() {
 
   const [selectedBadge, setSelectedBadge] = useState<typeof BADGES[0] | null>(null);
 
-  const headerAnim = useRef(new Animated.Value(Platform.OS === 'web' ? 1 : 0)).current;
-  const headerScale = useRef(new Animated.Value(Platform.OS === 'web' ? 1 : 0.9)).current;
+  const headerAnim = useRef(new Animated.Value(1)).current;
+  const headerScale = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
+    if (Platform.OS !== 'web') {
+      headerAnim.setValue(0);
+      headerScale.setValue(0.9);
+    }
     Animated.parallel([
       Animated.timing(headerAnim, { toValue: 1, duration: 600, useNativeDriver: true }),
       Animated.spring(headerScale, { toValue: 1, tension: 80, friction: 8, useNativeDriver: true }),

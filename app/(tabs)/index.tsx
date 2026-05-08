@@ -34,10 +34,14 @@ interface NavCardProps {
 
 function NavCard({ emoji, title, subtitle, color, gradientEnd, progress, onPress, delay = 0 }: NavCardProps) {
   const slideAnim = useRef(new Animated.Value(40)).current;
-  const opacityAnim = useRef(new Animated.Value(Platform.OS === 'web' ? 1 : 0)).current;
+  const opacityAnim = useRef(new Animated.Value(1)).current;
   const scaleAnim = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
+    if (Platform.OS !== 'web') {
+      opacityAnim.setValue(0);
+      slideAnim.setValue(40);
+    }
     Animated.parallel([
       Animated.timing(slideAnim, { toValue: 0, duration: 400, delay, useNativeDriver: true }),
       Animated.timing(opacityAnim, { toValue: 1, duration: 400, delay, useNativeDriver: true }),
@@ -88,10 +92,14 @@ export default function HomeScreen() {
   const totalActivities = LESSONS.length + QUIZ_LEVELS.length + CODE_CHALLENGES.length;
   const completedActivities = completedLessons.length + completedQuizzes.length + completedChallenges.length;
 
-  const headerScale = useRef(new Animated.Value(Platform.OS === 'web' ? 1 : 0.9)).current;
-  const headerOpacity = useRef(new Animated.Value(Platform.OS === 'web' ? 1 : 0)).current;
+  const headerScale = useRef(new Animated.Value(1)).current;
+  const headerOpacity = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
+    if (Platform.OS !== 'web') {
+      headerScale.setValue(0.9);
+      headerOpacity.setValue(0);
+    }
     Animated.parallel([
       Animated.spring(headerScale, { toValue: 1, tension: 80, friction: 8, useNativeDriver: true }),
       Animated.timing(headerOpacity, { toValue: 1, duration: 500, useNativeDriver: true }),
