@@ -1,0 +1,768 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>P4 Science WA4 Coach</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Bite-size P4 Science revision for WA4: pick a topic or try a mixed mock paper. Wrong answers explain the mistake and highlight the key words examiners look for.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Lexend:wght@400;500;600&display=swap">
+<style>
+/* Layout: one narrow column, one "screen" at a time, like a workbook page you flip. */
+:root {
+  --bg: #F3F8F7;
+  --surface: #FFFFFF;
+  --surface-2: #E6F0EE;
+  --ink: #16323A;
+  --ink-soft: #4C6870;
+  --line: #CFE0DC;
+  --accent: #0B7F66;
+  --accent-ink: #FFFFFF;
+  --good: #1B8A4E;
+  --good-bg: #E3F5EA;
+  --bad: #C2412D;
+  --bad-bg: #FCEAE5;
+  --hl-bg: #FFE45C;
+  --hl-ink: #1E1A00;
+  --miss-bg: #FFD3C7;
+  --t1: #DCEBFF; --t1-ink: #2559A8;
+  --t2: #FFE2D3; --t2-ink: #B4461C;
+  --t3: #FFF2C2; --t3-ink: #8A6400;
+  --t4: #FADCE8; --t4-ink: #A53266;
+  --t5: #DDF3DC; --t5-ink: #2E7A2C;
+  --t6: #E8E0FA; --t6-ink: #5B3EA8;
+  --font-display: "Baloo 2", "Trebuchet MS", system-ui, sans-serif;
+  --font-body: "Lexend", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --radius: 14px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0E1A1D; --surface: #152529; --surface-2: #1C3136; --ink: #E4F1EE; --ink-soft: #9DB8B3; --line: #2A4449;
+    --accent: #3CC9A3; --accent-ink: #062019; --good: #5BD48F; --good-bg: #143A26; --bad: #FF8A73; --bad-bg: #3D1E18;
+    --miss-bg: #6B2D20;
+    --t1: #1B2F4D; --t1-ink: #8DB8FF; --t2: #43261A; --t2-ink: #FFAA82; --t3: #3B3115; --t3-ink: #F2CC5C;
+    --t4: #40202E; --t4-ink: #F59AC2; --t5: #1D3A1F; --t5-ink: #8FDB8B; --t6: #2C2347; --t6-ink: #BDA6FF;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0E1A1D; --surface: #152529; --surface-2: #1C3136; --ink: #E4F1EE; --ink-soft: #9DB8B3; --line: #2A4449;
+  --accent: #3CC9A3; --accent-ink: #062019; --good: #5BD48F; --good-bg: #143A26; --bad: #FF8A73; --bad-bg: #3D1E18;
+  --miss-bg: #6B2D20;
+  --t1: #1B2F4D; --t1-ink: #8DB8FF; --t2: #43261A; --t2-ink: #FFAA82; --t3: #3B3115; --t3-ink: #F2CC5C;
+  --t4: #40202E; --t4-ink: #F59AC2; --t5: #1D3A1F; --t5-ink: #8FDB8B; --t6: #2C2347; --t6-ink: #BDA6FF;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font-family: var(--font-body); font-size: 17px; line-height: 1.55;
+}
+.wrap {
+  max-width: 720px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 20px 48px;
+  display: flex; flex-direction: column; gap: 20px;
+}
+h1, h2, h3 { font-family: var(--font-display); line-height: 1.15; margin: 0; text-wrap: balance; }
+h1 { font-size: 2.1rem; font-weight: 800; }
+h2 { font-size: 1.55rem; font-weight: 700; }
+h3 { font-size: 1.2rem; font-weight: 700; }
+p { margin: 0; }
+button { font: inherit; color: inherit; cursor: pointer; }
+button:focus-visible, textarea:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.eyebrow { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); font-weight: 600; }
+.muted { color: var(--ink-soft); }
+
+/* Keyword highlighter: the one bold device on the page */
+mark.kw {
+  background: linear-gradient(transparent 12%, var(--hl-bg) 12%, var(--hl-bg) 88%, transparent 88%);
+  color: var(--hl-ink); padding: 0 .2em; border-radius: 3px; font-weight: 600;
+  -webkit-box-decoration-break: clone; box-decoration-break: clone;
+}
+mark.miss { background: var(--miss-bg); color: var(--ink); padding: 0 .25em; border-radius: 3px; font-weight: 600; }
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  border: 0; border-radius: 999px; padding: 12px 22px; font-weight: 600;
+  background: var(--accent); color: var(--accent-ink); min-height: 48px;
+}
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.btn.ghost { background: transparent; color: var(--ink); border: 2px solid var(--line); }
+.btn.small { padding: 8px 16px; min-height: 40px; font-size: .92rem; }
+.btn-row { display: flex; flex-wrap: wrap; gap: 10px; }
+.link-btn { background: none; border: 0; padding: 4px 0; color: var(--accent); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+
+/* Header */
+.top { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.brand { display: flex; flex-direction: column; gap: 2px; }
+.stats { display: flex; gap: 8px; flex-wrap: wrap; }
+.stat { background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; font-size: .9rem; font-variant-numeric: tabular-nums; }
+.stat b { font-family: var(--font-display); font-size: 1.1rem; }
+
+/* Home */
+.hero-card {
+  background: var(--accent); color: var(--accent-ink); border-radius: 22px; padding: 22px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.hero-card .btn { background: var(--accent-ink); color: var(--accent); align-self: flex-start; }
+.hero-card p { opacity: .92; max-width: 52ch; }
+.section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.topics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 520px) { .topics { grid-template-columns: 1fr; } }
+.topic {
+  text-align: left; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 14px; display: grid; grid-template-columns: 48px minmax(0, 1fr); gap: 4px 12px; align-items: center;
+}
+.topic:hover { border-color: var(--accent); }
+.ticon { grid-row: span 2; width: 48px; height: 48px; border-radius: 12px; display: grid; place-items: center; }
+.ticon svg { width: 28px; height: 28px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.topic .tname { font-family: var(--font-display); font-weight: 700; font-size: 1.15rem; line-height: 1.1; }
+.topic .tsub { font-size: .85rem; color: var(--ink-soft); }
+.meter { grid-column: 1 / -1; display: flex; align-items: center; gap: 8px; font-size: .8rem; color: var(--ink-soft); margin-top: 6px; font-variant-numeric: tabular-nums; }
+.meter .bar { flex: 1; height: 8px; background: var(--surface-2); border-radius: 99px; overflow: hidden; }
+.meter .bar i { display: block; height: 100%; background: var(--accent); border-radius: 99px; }
+.fixbox { background: var(--surface); border: 2px dashed var(--bad); border-radius: var(--radius); padding: 16px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+details.tips { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; }
+details.tips summary { font-family: var(--font-display); font-weight: 700; font-size: 1.1rem; cursor: pointer; }
+details.tips ol { margin: 10px 0 0; padding-left: 1.3em; display: grid; gap: 8px; }
+.foot { font-size: .82rem; color: var(--ink-soft); border-top: 1px solid var(--line); padding-top: 14px; max-width: 65ch; }
+
+/* Topic intro + learn cards */
+.back { align-self: flex-start; }
+.learn-card {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 22px;
+  display: flex; flex-direction: column; gap: 12px; min-height: 230px;
+}
+.learn-card .num { font-variant-numeric: tabular-nums; }
+.learn-card ul { margin: 0; padding-left: 1.2em; display: grid; gap: 6px; }
+.trapnote { background: var(--bad-bg); border-radius: 10px; padding: 10px 12px; font-size: .95rem; }
+.trapnote b { color: var(--bad); }
+.dots { display: flex; gap: 6px; justify-content: center; }
+.dots i { width: 9px; height: 9px; border-radius: 50%; background: var(--line); }
+.dots i.on { background: var(--accent); }
+.choice-list { display: grid; gap: 10px; }
+
+/* Quiz */
+.qbar { display: flex; flex-direction: column; gap: 8px; }
+.qbar-row { display: flex; justify-content: space-between; gap: 10px; font-size: .9rem; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+.progress { height: 10px; background: var(--surface-2); border-radius: 99px; overflow: hidden; }
+.progress i { display: block; height: 100%; background: var(--accent); transition: width .3s ease; }
+.qcard { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+.qhead { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.booklet { font-size: .78rem; letter-spacing: .06em; text-transform: uppercase; font-weight: 600; padding: 3px 10px; border-radius: 99px; }
+.marks { font-family: var(--font-display); font-weight: 700; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+.qtext { font-size: 1.08rem; }
+.qtext b { color: var(--bad); }
+.setup { background: var(--surface-2); border-radius: 12px; padding: 12px 14px; font-size: .95rem; overflow-x: auto; }
+.setup table { border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.setup td, .setup th { border: 1px solid var(--line); padding: 4px 10px; text-align: left; }
+.opts { display: grid; gap: 10px; }
+.opt {
+  display: grid; grid-template-columns: 40px minmax(0, 1fr); align-items: center; gap: 10px; text-align: left;
+  background: var(--bg); border: 2px solid var(--line); border-radius: 12px; padding: 10px 12px; min-height: 52px;
+}
+.opt:hover:not(:disabled) { border-color: var(--accent); }
+.opt .on { font-family: var(--font-display); font-weight: 700; font-variant-numeric: tabular-nums; color: var(--ink-soft); }
+.opt.right { border-color: var(--good); background: var(--good-bg); }
+.opt.wrong { border-color: var(--bad); background: var(--bad-bg); }
+.opt:disabled { cursor: default; }
+.opt.dim { opacity: .55; }
+textarea {
+  width: 100%; min-height: 110px; resize: vertical; font: inherit; color: var(--ink);
+  background: var(--bg); border: 2px solid var(--line); border-radius: 12px; padding: 12px;
+}
+.hint { background: var(--surface-2); border-radius: 10px; padding: 10px 12px; font-size: .95rem; }
+.fb { border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 10px; animation: pop .25s ease; }
+.fb.good { background: var(--good-bg); }
+.fb.bad { background: var(--bad-bg); }
+.fb.part { background: var(--surface-2); }
+.fb h3 { display: flex; align-items: center; gap: 8px; }
+.fb.good h3 { color: var(--good); }
+.fb.bad h3 { color: var(--bad); }
+.tag { display: inline-block; font-size: .72rem; letter-spacing: .07em; text-transform: uppercase; font-weight: 600; border-radius: 6px; padding: 2px 8px; margin-right: 6px; vertical-align: 1px; }
+.tag.trap { background: var(--bad); color: var(--surface); }
+.tag.why { background: var(--accent); color: var(--accent-ink); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.chips .lbl { font-size: .85rem; color: var(--ink-soft); margin-right: 2px; }
+.kwlist { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.kwlist li { display: flex; gap: 8px; align-items: baseline; }
+.kwlist .ok { color: var(--good); font-weight: 700; }
+.kwlist .no { color: var(--bad); font-weight: 700; }
+.yours { background: var(--surface); border-radius: 10px; padding: 10px 12px; font-size: .95rem; border: 1px solid var(--line); overflow-wrap: anywhere; }
+.model { background: var(--surface); border-radius: 10px; padding: 10px 12px; border-left: 4px solid var(--accent); }
+
+/* Result */
+.result { background: var(--surface); border: 1px solid var(--line); border-radius: 22px; padding: 24px; display: flex; flex-direction: column; gap: 14px; align-items: flex-start; }
+.score { font-family: var(--font-display); font-size: 3rem; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+.stars { display: flex; gap: 6px; }
+.stars svg { width: 38px; height: 38px; }
+.stars .full { fill: var(--hl-bg); stroke: var(--t3-ink); }
+.stars .empty { fill: var(--surface-2); stroke: var(--line); }
+.stars svg { stroke-width: 1.5; animation: pop .4s ease backwards; }
+.stars svg:nth-child(2) { animation-delay: .12s; }
+.stars svg:nth-child(3) { animation-delay: .24s; }
+.mistakes { display: grid; gap: 10px; width: 100%; }
+.mist { background: var(--bg); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; }
+@keyframes pop { from { transform: scale(.94); opacity: .4; } to { transform: none; opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+<main class="wrap" id="app" aria-live="polite"></main>
+
+<script>
+(function () {
+"use strict";
+
+/* ---------- Icons ---------- */
+var ICON = {
+  matter: '<svg viewBox="0 0 24 24"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/><path d="M7.4 15h9.2"/></svg>',
+  heat: '<svg viewBox="0 0 24 24"><path d="M14 14.8V5a2 2 0 0 0-4 0v9.8a4 4 0 1 0 4 0z"/><path d="M12 9v7"/></svg>',
+  light: '<svg viewBox="0 0 24 24"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></svg>',
+  digest: '<svg viewBox="0 0 24 24"><path d="M12 7c-1.5-1.2-5-1.5-6.5 1.5S5 16 7 19s3.5 2 5 1.5c1.5.5 3 1.5 5-1.5s2.5-7.5 1.5-10.5S13.5 5.8 12 7z"/><path d="M12 7c0-2 1-3.5 3-4"/></svg>',
+  plants: '<svg viewBox="0 0 24 24"><path d="M12 21V11"/><path d="M12 11C12 7 9 5 5 5c0 4 3 6 7 6z"/><path d="M12 13c0-3.5 2.5-6 7-6 0 4-3 6-7 6z"/></svg>',
+  cycles: '<svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 1-14.3 4.9"/><path d="M4 12a8 8 0 0 1 14.3-4.9"/><path d="M18.5 3v4.2h-4.2"/><path d="M5.5 21v-4.2h4.2"/></svg>'
+};
+var STAR = '<svg viewBox="0 0 24 24"><path d="M12 2.8l2.8 5.8 6.3.9-4.6 4.4 1.1 6.3L12 17.2l-5.6 3 1.1-6.3-4.6-4.4 6.3-.9z"/></svg>';
+
+/* ---------- Content ----------
+   <k>…</k> marks a key word. Question types:
+   mcq: opts, ans (0-based), why, trap {optionIndex: misconception}
+   oe:  groups [{label, any:[variants]}], model, hint, trap
+*/
+var TOPICS = [
+{
+  id: "matter", name: "Matter", sub: "Solids, liquids and gases", n: 1,
+  cards: [
+    { h: "What is matter?", pts: ["Matter is anything that <k>has mass</k> and <k>occupies space</k>.", "Air and water are matter.", "Light, heat, sound and shadows are <b>not</b> matter. They have no mass and do not take up space."], trap: "Air is matter too. A ball pumped with more air becomes heavier." },
+    { h: "Solid, liquid, gas", pts: ["Solid: <k>definite shape</k> and <k>definite volume</k>.", "Liquid: <k>no definite shape</k> (takes the shape of its container) but <k>definite volume</k>.", "Gas: <k>no definite shape</k> and <k>no definite volume</k>. It fills the whole container."], trap: "Sand can be poured, but it is a solid. Each grain has a definite shape and volume." },
+    { h: "Squeeze test", pts: ["Only gases <k>can be compressed</k> (squeezed into a smaller space).", "Solids and liquids <k>cannot be compressed</k>.", "When air is compressed, its <k>volume decreases</k> but its <k>mass stays the same</k>."] },
+    { h: "Measuring", pts: ["Mass: grams (g) or kilograms (kg), using a balance.", "Volume: cm³ or ml. <k>1 ml = 1 cm³</k>.", "Volume of a stone = water level after − water level before."], trap: "Read the measuring cylinder at eye level." }
+  ],
+  qs: [
+    { id: "m1", t: "mcq", q: "Which of the following is <b>not</b> matter?", opts: ["Air", "Water", "Light", "Sand"], ans: 2,
+      why: "Light does not <k>have mass</k> and does not <k>occupy space</k>, so it is not matter.",
+      trap: { 0: "Air <k>has mass</k> and <k>occupies space</k>. You cannot see it, but it is still matter.", 1: "Water <k>has mass</k> and <k>occupies space</k>, so it is matter.", 3: "Sand <k>has mass</k> and <k>occupies space</k>. It is a solid." },
+      kw: ["has mass", "occupies space"] },
+    { id: "m2", t: "mcq", q: "Which property do liquids and gases <b>both</b> have?", opts: ["They have a definite volume.", "They can be compressed.", "They have a definite shape.", "They have no definite shape."], ans: 3,
+      why: "Both liquids and gases <k>take the shape of their container</k>, so they have <k>no definite shape</k>.",
+      trap: { 0: "Only liquids have a <k>definite volume</k>. A gas spreads out to fill its whole container.", 1: "Only gases <k>can be compressed</k>. Liquids cannot.", 2: "Only solids have a <k>definite shape</k>." },
+      kw: ["no definite shape"] },
+    { id: "m3", t: "mcq", q: "Ali sealed the nozzle of a syringe filled with air. He pushed the plunger in. Which statement is correct?", opts: ["The mass of the air decreased.", "The plunger could be pushed in because air can be compressed.", "Some air escaped from the syringe.", "The volume of the air increased."], ans: 1,
+      why: "Air is a gas, and gases <k>can be compressed</k>. The <k>volume decreases</k> but the <k>mass stays the same</k>.",
+      trap: { 0: "No air went in or out, so the <k>mass stays the same</k>. Only the <k>volume decreased</k>.", 2: "The nozzle was sealed, so no air could escape.", 3: "Pushing the plunger squeezes the air into a smaller space, so the <k>volume decreased</k>." },
+      kw: ["can be compressed", "mass stays the same"] },
+    { id: "m4", t: "mcq", q: "Which of the following has a definite volume but no definite shape?", opts: ["Ice cube", "Steam", "Wooden block", "Cooking oil"], ans: 3,
+      why: "Cooking oil is a liquid. Liquids have a <k>definite volume</k> but <k>no definite shape</k>.",
+      trap: { 0: "An ice cube is a solid. It has a <k>definite shape</k> as well.", 1: "Steam is a gas. It has <k>no definite volume</k>.", 2: "Wood is a solid. It has a <k>definite shape</k>." },
+      kw: ["definite volume", "no definite shape"] },
+    { id: "m5", t: "mcq", q: "Some water was poured into a measuring cylinder. A stone was then lowered into it.", setup: "<table><tr><th></th><th>Water level</th></tr><tr><td>Before</td><td>50 ml</td></tr><tr><td>After adding stone</td><td>72 ml</td></tr></table>", q2: "What is the volume of the stone?", opts: ["22 cm³", "50 cm³", "72 cm³", "122 cm³"], ans: 0,
+      why: "Volume of stone = 72 ml − 50 ml = 22 ml. Since <k>1 ml = 1 cm³</k>, that is 22 cm³. The stone <k>occupies space</k> and pushes the water level up.",
+      trap: { 1: "50 ml is the water only. You need the <k>difference</k> between the two readings.", 2: "72 ml is water + stone together. Subtract the water.", 3: "Do not add the readings. Find the <k>difference</k>: 72 − 50." },
+      kw: ["difference", "1 ml = 1 cm³"] },
+    { id: "m6", t: "mcq", q: "Sand can be poured and it takes the shape of its container. What state of matter is sand?", opts: ["Liquid, because it can be poured.", "Solid, because each grain has a definite shape and definite volume.", "Gas, because there is air between the grains.", "Liquid, because it takes the shape of its container."], ans: 1,
+      why: "Look at <b>one grain</b>. Each grain has a <k>definite shape</k> and a <k>definite volume</k>, so sand is a solid.",
+      trap: { 0: "Being able to pour something does not make it a liquid. Look at each grain: it keeps its <k>definite shape</k>.", 2: "The air between the grains is a gas, but the grains themselves are solid.", 3: "The pile changes shape, but each grain keeps its own <k>definite shape</k>." },
+      kw: ["definite shape", "definite volume"] },
+    { id: "m7", t: "oe", marks: 2, q: "Mei pushed an 'empty' glass upside down into a basin of water. The water did not fill the glass completely. Explain why.",
+      groups: [{ label: "air", any: ["air"] }, { label: "occupies space", any: ["occupies space", "occupy space", "occupied space", "takes up space", "take up space", "took up space", "occupies", "occupy"] }],
+      model: "The 'empty' glass contains <k>air</k>. Air <k>occupies space</k>, so the water cannot enter the space taken up by the air.",
+      hint: "What is inside an 'empty' glass? What does matter always do?",
+      trap: "'Empty' in Science usually means 'full of air'." },
+    { id: "m8", t: "oe", marks: 2, q: "A deflated ball had a mass of 300 g. Ravi pumped air into it and its mass became 310 g. What can you conclude about air? Explain.",
+      groups: [{ label: "has mass", any: ["has mass", "have mass", "has weight", "has a mass"] }, { label: "more air added", any: ["more air", "air was pumped", "air pumped", "pumped air", "pumped in", "added air", "air added", "air was added"] }],
+      model: "Air <k>has mass</k>. The ball became heavier because <k>more air</k> was pumped into it.",
+      hint: "The only thing that went into the ball was air. What made the ball heavier?",
+      trap: "Gases <k>have mass</k>. Never write 'gas has no mass'." }
+  ]
+},
+{
+  id: "heat", name: "Heat", sub: "Heat flow, conductors, expansion", n: 2,
+  cards: [
+    { h: "Heat vs temperature", pts: ["<k>Heat</k> is a form of <k>energy</k>.", "<k>Temperature</k> tells us how hot or cold something is. It is measured in <k>°C</k> using a <k>thermometer</k>.", "Heat is not measured in °C."] },
+    { h: "Heat flows one way", pts: ["Heat flows from a <k>hotter</k> object to a <k>colder</k> object.", "It stops when both reach the <k>same temperature</k>.", "When ice feels cold, your hand is <k>losing heat</k> to the ice."], trap: "There is no such thing as 'coldness' flowing. Always talk about heat." },
+    { h: "Conductors", pts: ["<k>Good conductors of heat</k> let heat flow through <k>quickly</k>: metals like steel, copper, aluminium.", "<k>Poor conductors of heat</k> let heat flow <k>slowly</k>: wood, plastic, rubber, cloth, styrofoam, air."], trap: "A jacket does not give you heat. It is a poor conductor, so it slows down heat loss from your body." },
+    { h: "Expand and contract", pts: ["When matter <k>gains heat</k>, it <k>expands</k> (takes up more space).", "When matter <k>loses heat</k>, it <k>contracts</k>.", "Gaps are left between railway tracks so they have space to expand on hot days."] }
+  ],
+  qs: [
+    { id: "h1", t: "mcq", q: "Siti held an ice cube in her palm. Her hand felt cold. Why?", opts: ["Coldness flowed from the ice cube to her hand.", "The ice cube lost heat to her hand.", "Her hand lost heat to the ice cube.", "Her hand gained coldness from the ice cube."], ans: 2,
+      why: "Heat flows from the <k>hotter</k> hand to the <k>colder</k> ice. Her hand <k>lost heat</k>, so it felt cold.",
+      trap: { 0: "'Coldness' does not flow. Only <k>heat</k> flows, from <k>hotter</k> to <k>colder</k>.", 1: "The ice is colder, so it <k>gains heat</k>. It does not lose heat to the warmer hand.", 3: "There is no 'coldness'. Her hand <k>lost heat</k>." },
+      kw: ["lost heat", "hotter to colder"] },
+    { id: "h2", t: "mcq", q: "A metal spoon and a plastic spoon were placed in a bowl of hot soup. After 2 minutes, which handle felt hotter, and why?", opts: ["Plastic handle, because plastic is a good conductor of heat.", "Metal handle, because metal is a good conductor of heat.", "Metal handle, because metal is a poor conductor of heat.", "Both are the same because the soup is the same."], ans: 1,
+      why: "Metal is a <k>good conductor of heat</k>. Heat flows through it <k>quickly</k> from the soup to the handle.",
+      trap: { 0: "Plastic is a <k>poor conductor of heat</k>. Heat flows through it slowly.", 2: "Right spoon, wrong reason. Metal is a <k>good conductor</k>, not a poor one.", 3: "Different materials let heat flow at different speeds. Metal <k>conducts heat</k> faster." },
+      kw: ["good conductor of heat", "quickly"] },
+    { id: "h3", t: "mcq", q: "A dented ping-pong ball was placed in hot water. The dent popped out. Why?", opts: ["The air inside the ball gained heat and expanded.", "The air inside the ball lost heat and contracted.", "Hot water entered the ball and pushed out the dent.", "The plastic gained heat and contracted."], ans: 0,
+      why: "The air inside <k>gained heat</k> from the hot water and <k>expanded</k>, pushing the dent out.",
+      trap: { 1: "The water is hot, so the air <k>gains heat</k>. Losing heat would make it contract and the dent would stay.", 2: "The ball is sealed. No water can enter.", 3: "Matter that gains heat <k>expands</k>. It does not contract." },
+      kw: ["gained heat", "expanded"] },
+    { id: "h4", t: "mcq", q: "Which statement about heat and temperature is correct?", opts: ["Heat and temperature are the same thing.", "Heat is measured in °C.", "Heat is a form of energy. Temperature tells how hot or cold something is.", "Temperature is a form of energy."], ans: 2,
+      why: "<k>Heat</k> is a form of <k>energy</k>. <k>Temperature</k> is a measure of how hot or cold something is, in <k>°C</k>.",
+      trap: { 0: "They are different. Heat is <k>energy</k>; temperature is a <k>measure</k> of hotness.", 1: "<k>Temperature</k> is measured in °C, not heat.", 3: "<k>Heat</k> is the energy. Temperature is only a measurement." },
+      kw: ["form of energy", "temperature"] },
+    { id: "h5", t: "mcq", q: "Gaps are left between the steel railway tracks. What is the reason?", opts: ["To let rainwater drain away.", "To give the tracks space to expand when they gain heat on hot days.", "To give the tracks space to contract when they gain heat.", "To make the tracks lighter."], ans: 1,
+      why: "Steel <k>gains heat</k> on hot days and <k>expands</k>. Without gaps, the tracks would bend.",
+      trap: { 0: "The gaps are about heat, not water.", 2: "Gaining heat makes matter <k>expand</k>, not contract.", 3: "The gaps do not change the mass much. They allow <k>expansion</k>." },
+      kw: ["gain heat", "expand"] },
+    { id: "h6", t: "mcq", q: "A cup of hot milk was left on the table in a room at 30 °C. What will happen to the milk?", opts: ["It loses heat until it is colder than 30 °C.", "It gains heat from the surrounding air.", "It loses heat to the surrounding air until it reaches 30 °C.", "Its temperature stays the same."], ans: 2,
+      why: "Heat flows from the <k>hotter</k> milk to the <k>cooler surrounding air</k> until both are at the <k>same temperature</k>.",
+      trap: { 0: "Heat stops flowing once the milk reaches the <k>same temperature</k> as the room. It will not go colder than 30 °C.", 1: "The milk is hotter than the air, so it <k>loses heat</k>.", 3: "The milk is hotter than its surroundings, so it <k>loses heat</k> and its temperature drops." },
+      kw: ["loses heat", "same temperature"] },
+    { id: "h7", t: "oe", marks: 2, q: "Cooking pots are usually made of metal but have plastic handles. Explain why.",
+      groups: [{ label: "metal is a good conductor of heat", any: ["good conductor"] }, { label: "plastic is a poor conductor of heat", any: ["poor conductor", "bad conductor", "insulator"] }, { label: "heat flows quickly / slowly", any: ["quickly", "faster", "fast", "slowly", "slower"] }],
+      model: "Metal is a <k>good conductor of heat</k>, so heat flows <k>quickly</k> from the fire to the food. Plastic is a <k>poor conductor of heat</k>, so heat flows <k>slowly</k> to the handle and our hand does not get burnt.",
+      hint: "Explain both parts: the pot and the handle. Use the word 'conductor'.",
+      trap: "Always write the full phrase 'good / poor <k>conductor of heat</k>'." },
+    { id: "h8", t: "oe", marks: 2, q: "Jun wrapped ice cube A in a woollen cloth. Ice cube B was left unwrapped. Which ice cube melted more slowly? Explain why.",
+      groups: [{ label: "ice cube A", any: ["ice cube a", "cube a", "a melted", "a melts", "a will", "a is", "wrapped one", "the wrapped"] }, { label: "wool is a poor conductor of heat", any: ["poor conductor", "bad conductor", "insulator"] }, { label: "slows heat gain from surrounding air", any: ["gain heat", "gains heat", "heat gain", "gained heat", "heat from the surrounding", "heat from surrounding", "heat from the air", "surrounding"] }],
+      model: "Ice cube <k>A</k> melted more slowly. Wool is a <k>poor conductor of heat</k>. It slows down the <k>heat gain</k> from the <k>surrounding air</k> to the ice cube.",
+      hint: "The ice melts when it gains heat. Where does the heat come from?",
+      trap: "Do not write 'the cloth keeps the coldness in'. Write that it slows down <k>heat gain</k>." }
+  ]
+},
+{
+  id: "light", name: "Light", sub: "Light sources, seeing, shadows", n: 3,
+  cards: [
+    { h: "Light sources", pts: ["A <k>light source</k> gives out its own light: the Sun, a lit candle, a switched-on torch.", "The Moon and mirrors are <b>not</b> light sources. They only <k>reflect</k> light."] },
+    { h: "How we see", pts: ["Light <k>travels in straight lines</k>.", "We see an object when light from it is <k>reflected</k> and <k>enters our eyes</k>."], trap: "Light does not come out of our eyes. It goes into our eyes." },
+    { h: "Letting light through", pts: ["<k>Transparent</k>: allows most light through, we see clearly (clear glass).", "<k>Translucent</k>: allows some light through, things look blurry (frosted glass, tracing paper).", "<k>Opaque</k>: does not allow light to pass through (wood, metal, cardboard)."] },
+    { h: "Shadows", pts: ["A <k>shadow</k> forms when an opaque or translucent object <k>blocks</k> light.", "The shadow is on the side <k>opposite the light source</k>.", "Object moved <k>closer to the light source</k>: shadow becomes <k>bigger</k>."] }
+  ],
+  qs: [
+    { id: "l1", t: "mcq", q: "Which of the following is a light source?", opts: ["The Moon", "A mirror", "A lit candle", "A shiny diamond"], ans: 2,
+      why: "A lit candle <k>gives out its own light</k>, so it is a <k>light source</k>.",
+      trap: { 0: "The Moon only <k>reflects</k> light from the Sun. It does not give out its own light.", 1: "A mirror only <k>reflects</k> light.", 3: "A diamond sparkles because it <k>reflects</k> light. It does not give out light." },
+      kw: ["light source", "gives out its own light"] },
+    { id: "l2", t: "mcq", q: "How are we able to see a book on the table in a bright room?", opts: ["Light from our eyes travels to the book.", "Light from the lamp is reflected by the book into our eyes.", "The book gives out its own light.", "Light from the book is reflected by our eyes."], ans: 1,
+      why: "Light from the lamp hits the book, is <k>reflected</k> by the book and <k>enters our eyes</k>.",
+      trap: { 0: "Light <k>enters</k> our eyes. It never comes out of them.", 2: "A book is not a <k>light source</k>. It only reflects light.", 3: "Our eyes receive light. The book is the one that <k>reflects</k> it." },
+      kw: ["reflected", "enters our eyes"] },
+    { id: "l3", t: "mcq", q: "A toy is placed between a torch and a screen. The toy is then moved closer to the torch. What happens to its shadow?", opts: ["The shadow becomes bigger.", "The shadow becomes smaller.", "The shadow stays the same size.", "The shadow disappears."], ans: 0,
+      why: "Closer to the light source, the toy <k>blocks more light</k>, so the shadow becomes <k>bigger</k>.",
+      trap: { 1: "It is the other way round. Moving <k>closer to the light source</k> makes the shadow <k>bigger</k>.", 2: "The toy now <k>blocks more light</k>, so the size changes.", 3: "The toy is still <k>blocking</k> light, so there is still a shadow." },
+      kw: ["closer to the light source", "bigger"] },
+    { id: "l4", t: "mcq", q: "When Wei Ling looked through a frosted glass window, the things outside looked blurry. The frosted glass is …", opts: ["transparent", "opaque", "a light source", "translucent"], ans: 3,
+      why: "<k>Translucent</k> materials allow <k>some light</k> to pass through, so things look blurry.",
+      trap: { 0: "Through a <k>transparent</k> material we see clearly, not blurry.", 1: "An <k>opaque</k> material lets no light through. She would see nothing.", 2: "The glass does not give out its own light." },
+      kw: ["translucent", "some light"] },
+    { id: "l5", t: "mcq", q: "At 8 a.m., the Sun is in the east. In which direction will a tree's shadow point?", opts: ["North", "East", "West", "South"], ans: 2,
+      why: "A shadow forms on the side <k>opposite the light source</k>. Sun in the east, shadow points <k>west</k>.",
+      trap: { 0: "The shadow is always <k>opposite the light source</k>. Opposite of east is west.", 1: "The shadow is never on the same side as the light. It is <k>opposite</k>.", 3: "Opposite of east is <k>west</k>, not south." },
+      kw: ["opposite the light source"] },
+    { id: "l6", t: "mcq", q: "Sam wants to find out which material allows the most light to pass through. He uses a torch and a light sensor. Which variable should he <b>change</b>?", opts: ["Distance between torch and sensor", "Type of material", "Thickness of material", "Brightness of the torch"], ans: 1,
+      why: "For a <k>fair test</k>, change only the thing you are testing: the <k>type of material</k>. Keep everything else the <k>same</k>.",
+      trap: { 0: "Keep the distance the <k>same</k>, or the test is not fair.", 2: "Keep the thickness the <k>same</k>. Only the <k>type of material</k> changes.", 3: "Use the same torch at the same brightness to keep it a <k>fair test</k>." },
+      kw: ["fair test", "type of material"] },
+    { id: "l7", t: "oe", marks: 2, q: "A cat hid behind a wooden box. Explain why Tom could not see the cat.",
+      groups: [{ label: "wood is opaque / blocks light", any: ["opaque", "does not allow light", "doesn't allow light", "block", "cannot pass", "can't pass", "not let light"] }, { label: "light reflected from the cat", any: ["reflect"] }, { label: "cannot enter Tom's eyes", any: ["eye"] }],
+      model: "Wood is <k>opaque</k> and does not allow light to pass through. Light <k>reflected</k> from the cat is <k>blocked</k> and cannot <k>enter Tom's eyes</k>.",
+      hint: "To see something, light from it must reach your eyes. What stopped it?",
+      trap: "Say where the light goes: <k>reflected</k> from the cat into the <k>eyes</k>." },
+    { id: "l8", t: "oe", marks: 2, q: "Why is the shape of a shadow similar to the outline of the object?",
+      groups: [{ label: "light travels in straight lines", any: ["straight line"] }, { label: "object blocks light", any: ["block", "does not allow light", "doesn't allow light", "cannot pass", "can't pass"] }],
+      model: "Light <k>travels in straight lines</k>. The object <k>blocks</k> the light, so the shadow has the same outline as the object.",
+      hint: "There are two ideas: how light travels, and what the object does to it." }
+  ]
+},
+{
+  id: "digest", name: "Digestive System", sub: "Organs and their jobs", n: 4,
+  cards: [
+    { h: "What is digestion?", pts: ["<k>Digestion</k> is breaking down food into <k>simpler substances</k> that the body can <k>absorb</k>."] },
+    { h: "Food's journey", pts: ["<k>Mouth → gullet → stomach → small intestine → large intestine → anus</k>.", "Food does <b>not</b> pass through the liver or pancreas."] },
+    { h: "Who does what", pts: ["Mouth: teeth break food into <k>smaller pieces</k>; <k>saliva</k> (a digestive juice) starts digestion.", "Gullet: moves food to the stomach. <b>No</b> digestion here.", "Stomach: churns food with <k>digestive juices</k>.", "Small intestine: digestion is <k>completed</k>; digested food is <k>absorbed into the blood</k>.", "Large intestine: <k>water is absorbed</k>."] },
+    { h: "Start and finish", pts: ["Digestion <k>starts in the mouth</k>.", "Digestion is <k>completed in the small intestine</k>."], trap: "Many pupils write 'digestion starts in the stomach'. It starts in the mouth." }
+  ],
+  qs: [
+    { id: "d1", t: "mcq", q: "Where does digestion begin?", opts: ["Stomach", "Mouth", "Gullet", "Small intestine"], ans: 1,
+      why: "Digestion <k>starts in the mouth</k>. Teeth break food into smaller pieces and <k>saliva</k> starts digesting it.",
+      trap: { 0: "The stomach continues digestion, but digestion has already <k>started in the mouth</k>.", 2: "<b>No</b> digestion happens in the gullet. It only moves food.", 3: "Digestion is <k>completed</k> in the small intestine. It starts in the mouth." },
+      kw: ["starts in the mouth", "saliva"] },
+    { id: "d2", t: "mcq", q: "In which organ is digested food absorbed into the blood?", opts: ["Stomach", "Large intestine", "Small intestine", "Gullet"], ans: 2,
+      why: "Digested food is <k>absorbed into the blood</k> in the <k>small intestine</k>.",
+      trap: { 0: "The stomach digests food but does not absorb it into the blood.", 1: "The large intestine absorbs <k>water</k>, not digested food.", 3: "The gullet only moves food to the stomach." },
+      kw: ["small intestine", "absorbed into the blood"] },
+    { id: "d3", t: "mcq", q: "Food does <b>not</b> pass through which organ?", opts: ["Gullet", "Liver", "Stomach", "Large intestine"], ans: 1,
+      why: "The <k>liver</k> helps digestion, but food <k>does not pass through</k> it.",
+      trap: { 0: "Food passes from the mouth through the <k>gullet</k> to the stomach.", 2: "Food passes through the stomach.", 3: "Undigested food passes through the large intestine before leaving through the anus." },
+      kw: ["does not pass through", "liver"] },
+    { id: "d4", t: "mcq", q: "Which organ absorbs water from undigested food?", opts: ["Large intestine", "Small intestine", "Stomach", "Mouth"], ans: 0,
+      why: "The <k>large intestine</k> <k>absorbs water</k> from the undigested food.",
+      trap: { 1: "The small intestine absorbs <k>digested food</k>. Water is mainly absorbed in the <k>large intestine</k>.", 2: "The stomach does not absorb water from undigested food.", 3: "The mouth does not absorb water." },
+      kw: ["large intestine", "absorbs water"] },
+    { id: "d5", t: "mcq", q: "Which correctly describes the gullet?", setup: "<table><tr><th></th><th>Digestive juice produced?</th><th>Digestion takes place?</th></tr><tr><td>(1)</td><td>Yes</td><td>Yes</td></tr><tr><td>(2)</td><td>Yes</td><td>No</td></tr><tr><td>(3)</td><td>No</td><td>Yes</td></tr><tr><td>(4)</td><td>No</td><td>No</td></tr></table>", opts: ["(1)", "(2)", "(3)", "(4)"], ans: 3,
+      why: "The gullet <k>produces no digestive juice</k> and <k>no digestion</k> takes place there. It only moves food to the stomach.",
+      trap: { 0: "That describes the stomach or small intestine. The gullet has <k>no digestive juice</k>.", 1: "The gullet does <b>not</b> produce digestive juice.", 2: "Without digestive juice, <k>no digestion</k> takes place in the gullet." },
+      kw: ["no digestive juice", "no digestion"] },
+    { id: "d6", t: "mcq", q: "Which shows the correct path of food in the digestive system?", opts: ["Mouth → stomach → gullet → small intestine → large intestine", "Mouth → gullet → stomach → large intestine → small intestine", "Mouth → gullet → stomach → small intestine → large intestine", "Mouth → gullet → small intestine → stomach → large intestine"], ans: 2,
+      why: "<k>Mouth → gullet → stomach → small intestine → large intestine → anus</k>.",
+      trap: { 0: "The <k>gullet</k> comes right after the mouth.", 1: "The <k>small intestine</k> comes before the large intestine.", 3: "The <k>stomach</k> comes before the small intestine." },
+      kw: ["mouth → gullet → stomach → small intestine → large intestine"] },
+    { id: "d7", t: "oe", marks: 2, q: "Explain why we should chew our food well before swallowing.",
+      groups: [{ label: "breaks food into smaller pieces", any: ["smaller"] }, { label: "digestive juices / saliva", any: ["digestive juice", "saliva", "juices"] }, { label: "digested faster / more easily", any: ["faster", "easier", "easily", "quickly", "quicker"] }],
+      model: "Chewing breaks food into <k>smaller pieces</k>. This gives the <k>digestive juices</k> more surface to work on, so the food is <k>digested faster</k>.",
+      hint: "What do teeth do to food? How does that help the digestive juices?" },
+    { id: "d8", t: "oe", marks: 2, q: "Mary said, 'Digestion is completed in the stomach.' Is she correct? Explain.",
+      groups: [{ label: "No", any: ["no$", "not correct", "incorrect", "disagree", "wrong", "not right"] }, { label: "completed in the small intestine", any: ["small intestine"] }],
+      model: "<k>No</k>. Digestion is <k>completed in the small intestine</k>, where digested food is then absorbed into the blood.",
+      hint: "Which organ comes after the stomach, and what happens there?" }
+  ]
+},
+{
+  id: "plants", name: "Plant Parts", sub: "Roots, stems, leaves, transport", n: 5,
+  cards: [
+    { h: "Roots", pts: ["<k>Hold the plant firmly</k> in the soil.", "<k>Take in water and mineral salts</k> from the soil."], trap: "Roots do not take in food. Plants make their own food." },
+    { h: "Stem", pts: ["<k>Holds up</k> the plant (supports it) so leaves get sunlight.", "<k>Water-carrying tubes</k>: carry water and mineral salts <k>from the roots up</k> to other parts.", "<k>Food-carrying tubes</k>: carry food <k>from the leaves</k> to other parts."] },
+    { h: "Leaves", pts: ["Leaves <k>make food</k> for the plant using <k>light</k>."] },
+    { h: "The ring experiment", pts: ["If a <k>ring of outer stem</k> is removed, the <k>food-carrying tubes</k> are cut.", "Food from the leaves cannot pass, so a <k>swelling forms above the ring</k>.", "The leaves do not wilt because the <k>water-carrying tubes</k> (inside) are still there."] }
+  ],
+  qs: [
+    { id: "p1", t: "mcq", q: "What are the functions of the roots?", opts: ["Take in food from the soil", "Make food for the plant", "Hold the plant firmly and take in water and mineral salts", "Carry food from the leaves to the stem"], ans: 2,
+      why: "Roots <k>hold the plant firmly</k> in the soil and <k>take in water and mineral salts</k>.",
+      trap: { 0: "Plants <k>make their own food</k>. Roots take in <k>water and mineral salts</k>, not food.", 1: "The <k>leaves</k> make food.", 3: "Food is carried by the <k>food-carrying tubes</k> in the stem." },
+      kw: ["water and mineral salts", "hold the plant firmly"] },
+    { id: "p2", t: "mcq", q: "A celery stalk was placed in red-coloured water. After a few hours, red lines were seen in the stalk and leaves. What does this show?", opts: ["Food-carrying tubes carry water.", "Water-carrying tubes carry water up the stem to the leaves.", "Leaves make red food.", "Water moves from the leaves to the roots."], ans: 1,
+      why: "The red water moved up the <k>water-carrying tubes</k> from the bottom of the stem to the <k>leaves</k>.",
+      trap: { 0: "Water is carried by <k>water-carrying tubes</k>. Food-carrying tubes carry food.", 2: "The red colour came from the coloured water, not from food.", 3: "Water moves <k>up</k>, from the roots to the leaves." },
+      kw: ["water-carrying tubes", "up to the leaves"] },
+    { id: "p3", t: "mcq", q: "A ring of the outer layer of a tree's stem was removed. After some weeks, a swelling appeared just above the ring. Why?", opts: ["Water collected above the ring.", "The water-carrying tubes were removed.", "Food from the leaves could not move down past the ring.", "The roots sent extra food up the stem."], ans: 2,
+      why: "Removing the outer ring cuts the <k>food-carrying tubes</k>. Food from the <k>leaves</k> cannot move down, so it <k>collects above the ring</k>.",
+      trap: { 0: "The swelling is caused by <k>food</k>, not water.", 1: "The <k>water-carrying tubes</k> are deeper inside and were not removed.", 3: "Food is made in the <k>leaves</k>, not the roots." },
+      kw: ["food-carrying tubes", "food from the leaves"] },
+    { id: "p4", t: "mcq", q: "Which part of a plant makes food?", opts: ["Roots", "Stem", "Flowers", "Leaves"], ans: 3,
+      why: "<k>Leaves</k> make food for the plant using <k>light</k>.",
+      trap: { 0: "Roots take in <k>water and mineral salts</k>. They do not make food.", 1: "The stem <k>carries</k> food and water. It does not make food.", 2: "Flowers help the plant <k>reproduce</k>." },
+      kw: ["leaves", "make food"] },
+    { id: "p5", t: "mcq", q: "What are the functions of the stem?", opts: ["Holds up the plant and carries water and food", "Takes in water from the soil", "Makes food", "Holds the plant firmly in the soil"], ans: 0,
+      why: "The stem <k>holds up the plant</k> and <k>carries water and food</k> to different parts.",
+      trap: { 1: "The <k>roots</k> take in water from the soil.", 2: "The <k>leaves</k> make food.", 3: "The <k>roots</k> hold the plant firmly in the soil." },
+      kw: ["holds up the plant", "carries water and food"] },
+    { id: "p6", t: "oe", marks: 2, q: "In the ring experiment, the leaves above the ring did <b>not</b> wilt. Explain why.",
+      groups: [{ label: "water-carrying tubes", any: ["water carrying tube", "water-carrying tube", "water tube"] }, { label: "were not removed", any: ["not removed", "not cut", "still", "intact", "not damaged", "inside"] }, { label: "water reaches the leaves", any: ["leaves", "leaf"] }],
+      model: "The <k>water-carrying tubes</k> were <k>not removed</k>, so water could still be carried from the roots <k>to the leaves</k>.",
+      hint: "Which tubes are in the outer layer, and which are deeper inside?",
+      trap: "Name the exact tube: '<k>water-carrying tubes</k>', not just 'tubes'." },
+    { id: "p7", t: "oe", marks: 2, q: "A potted plant was not watered for many days and it wilted. Explain why.",
+      groups: [{ label: "roots", any: ["root"] }, { label: "could not take in enough water", any: ["take in", "absorb", "get enough water", "not enough water", "no water", "less water"] }],
+      model: "The soil was dry, so the <k>roots</k> could <k>not take in enough water</k>. The plant lost more water than it took in, so it wilted.",
+      hint: "Which part takes in water, and what was missing?" }
+  ]
+},
+{
+  id: "cycles", name: "Life Cycles", sub: "Animals and plants", n: 6,
+  cards: [
+    { h: "Four stages", pts: ["<k>Egg → larva → pupa → adult</k>", "Butterfly, mosquito, beetle.", "The <k>pupa does not feed</k>.", "Mosquito <k>larvae and pupae live in water</k>."] },
+    { h: "Three stages", pts: ["<k>Egg → nymph → adult</k>", "Cockroach, grasshopper.", "A <k>nymph</k> looks like the adult but is smaller and has <k>no wings</k>."], trap: "Don't mix up larva (4-stage) and nymph (3-stage)." },
+    { h: "Frogs and chickens", pts: ["Frog: <k>egg → tadpole → froglet → adult frog</k>. Tadpoles live in water and breathe with gills.", "Chicken: <k>egg → chick → adult</k>."] },
+    { h: "Plants", pts: ["<k>Seed → seedling → adult plant</k> (with flowers, fruits and seeds).", "Seeds need <k>water</k>, <k>air</k> and a <k>suitable temperature</k> to <k>germinate</k>."], trap: "Light is <b>not</b> needed for germination." }
+  ],
+  qs: [
+    { id: "c1", t: "mcq", q: "Which animal has a 3-stage life cycle?", opts: ["Butterfly", "Mosquito", "Beetle", "Cockroach"], ans: 3,
+      why: "A cockroach goes through <k>egg → nymph → adult</k>: 3 stages.",
+      trap: { 0: "A butterfly has 4 stages: egg → <k>larva</k> → <k>pupa</k> → adult.", 1: "A mosquito has 4 stages, with a <k>larva</k> and a <k>pupa</k>.", 2: "A beetle has 4 stages, with a <k>larva</k> and a <k>pupa</k>." },
+      kw: ["egg → nymph → adult"] },
+    { id: "c2", t: "mcq", q: "At which stage of its life cycle does a butterfly <b>not</b> feed?", opts: ["Pupa", "Larva", "Adult", "None of these"], ans: 0,
+      why: "The <k>pupa does not feed</k>. It stays still while it changes into an adult.",
+      trap: { 1: "The larva (caterpillar) <k>feeds a lot</k> on leaves so it can grow.", 2: "Adult butterflies feed on <k>nectar</k>.", 3: "The <k>pupa</k> does not feed." },
+      kw: ["pupa does not feed"] },
+    { id: "c3", t: "mcq", q: "What do seeds need to germinate?", opts: ["Water, light and soil", "Water, air and a suitable temperature", "Light, air and fertiliser", "Soil, light and a suitable temperature"], ans: 1,
+      why: "Seeds need <k>water</k>, <k>air</k> and a <k>suitable temperature</k> to germinate.",
+      trap: { 0: "<k>Light is not needed</k> for germination, and seeds can germinate on wet cotton wool without soil.", 2: "<k>Light is not needed</k>. The seed uses its own <k>stored food</k>.", 3: "Seeds can germinate without soil or light. They need <k>water</k> and <k>air</k>." },
+      kw: ["water", "air", "suitable temperature"] },
+    { id: "c4", t: "mcq", q: "How is a cockroach nymph different from an adult cockroach?", opts: ["The nymph has wings.", "The nymph lives in water.", "The nymph has no wings.", "The nymph does not feed."], ans: 2,
+      why: "A <k>nymph</k> looks like the adult but is smaller and has <k>no wings</k>.",
+      trap: { 0: "It's the adult that has wings. The nymph has <k>no wings</k>.", 1: "Cockroach nymphs live on land.", 3: "Nymphs <k>feed</k> so that they can grow." },
+      kw: ["nymph", "no wings"] },
+    { id: "c5", t: "mcq", q: "Which shows the life cycle of a frog?", opts: ["Egg → froglet → tadpole → adult", "Egg → tadpole → froglet → adult", "Egg → larva → pupa → adult", "Egg → nymph → adult"], ans: 1,
+      why: "Frog: <k>egg → tadpole → froglet → adult frog</k>.",
+      trap: { 0: "The <k>tadpole</k> comes before the froglet.", 2: "That is a 4-stage insect life cycle, like a butterfly.", 3: "That is a 3-stage insect life cycle, like a cockroach." },
+      kw: ["egg → tadpole → froglet → adult"] },
+    { id: "c6", t: "oe", marks: 3, q: "Explain why changing the water in flower vases often helps to stop the spread of dengue.",
+      groups: [{ label: "mosquitoes lay eggs in stagnant water", any: ["egg"] }, { label: "larvae / pupae live in water", any: ["larva", "pupa"] }, { label: "cannot develop into adults", any: ["adult"] }],
+      model: "Mosquitoes lay <k>eggs</k> in <k>stagnant water</k>. Their <k>larvae and pupae</k> live in water. Changing the water removes them, so they cannot develop into <k>adult</k> mosquitoes.",
+      hint: "Which stages of the mosquito live in water? What happens if they are thrown away?",
+      trap: "Name the stages: <k>eggs</k>, <k>larvae</k>, <k>pupae</k>, <k>adults</k>." },
+    { id: "c7", t: "oe", marks: 2, q: "Ali put seeds on wet cotton wool in two dishes. Dish A was placed near a window. Dish B was placed in a dark cupboard. The seeds in both dishes germinated. What can he conclude?",
+      groups: [{ label: "light", any: ["light"] }, { label: "is not needed", any: ["not needed", "not required", "not necessary", "do not need", "does not need", "don't need", "doesn't need", "without"] }, { label: "for germination", any: ["germinat"] }],
+      model: "<k>Light is not needed</k> for seeds to <k>germinate</k>.",
+      hint: "What was different between dish A and dish B? Did it change the result?" }
+  ]
+}
+];
+
+var TIPS = [
+  "Circle the key word in the question: <b>not</b>, <b>both</b>, <b>explain</b>, <b>compare</b>.",
+  "'Explain' needs a reason. Use 'because' or 'so'.",
+  "Use the exact Science words: '<k>good conductor of heat</k>', not 'heat goes through easily'.",
+  "Write about <k>heat</k>, never 'coldness'.",
+  "For a fair test, change only <b>one</b> thing. Keep everything else the same.",
+  "Check units: cm³, ml, g, °C."
+];
+
+/* ---------- Helpers ---------- */
+var byId = {}, allQs = [];
+TOPICS.forEach(function (t) { t.qs.forEach(function (q) { q.topic = t.id; byId[q.id] = q; allQs.push(q); }); });
+function topicOf(id) { return TOPICS.filter(function (t) { return t.id === id; })[0]; }
+function kw(s) { return String(s).replace(/<k>/g, '<mark class="kw">').replace(/<\/k>/g, "</mark>"); }
+function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+function shuffle(a) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var x = a[i]; a[i] = a[j]; a[j] = x; } return a; }
+function marksOf(q) { return q.marks || 2; }
+function rx(v) {
+  var whole = /\$$/.test(v); v = v.replace(/\$$/, "");
+  var body = v.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/[\s-]+/g, "[\\s-]+");
+  return new RegExp((/^\w/.test(v) ? "\\b" : "") + body + (whole ? "\\b" : ""), "gi");
+}
+function iconBox(t) { return '<span class="ticon" style="background:var(--t' + t.n + ');color:var(--t' + t.n + '-ink)">' + ICON[t.id] + "</span>"; }
+
+/* ---------- Saved progress (this browser only) ---------- */
+var KEY = "p4sci-wa4-v1";
+var store = { stars: 0, answered: 0, best: {}, wrong: [] };
+try { var raw = localStorage.getItem(KEY); if (raw) { var s = JSON.parse(raw); if (s && typeof s === "object") store = Object.assign(store, s); } } catch (e) {}
+function save() { try { localStorage.setItem(KEY, JSON.stringify(store)); } catch (e) {} }
+function addWrong(id) { if (store.wrong.indexOf(id) < 0) store.wrong.push(id); }
+function clearWrong(id) { store.wrong = store.wrong.filter(function (x) { return x !== id; }); }
+
+/* ---------- State ---------- */
+var app = document.getElementById("app");
+var S = { screen: "home" };
+function go(next) { S = next; render(); window.scrollTo(0, 0); }
+
+function render() {
+  if (S.screen === "home") return renderHome();
+  if (S.screen === "topic") return renderTopic();
+  if (S.screen === "quiz") return renderQuiz();
+  if (S.screen === "result") return renderResult();
+}
+
+/* ---------- Home ---------- */
+function renderHome() {
+  var h = '<header class="top"><div class="brand"><span class="eyebrow">Primary 4 · Science</span><h1>WA4 Coach</h1></div>' +
+    '<div class="stats"><span class="stat"><b>' + store.stars + '</b> stars</span><span class="stat"><b>' + store.answered + "</b> answered</span></div></header>";
+  h += '<section class="hero-card"><span class="eyebrow" style="color:inherit;opacity:.85">Mixed practice · all topics</span><h2>WA4 mock paper</h2>' +
+    "<p>8 MCQs (Booklet A) and 4 open-ended questions (Booklet B), mixed from every topic. About 15 minutes.</p>" +
+    '<button class="btn" data-act="mock">Start mock paper</button></section>';
+  if (store.wrong.length) {
+    h += '<section class="fixbox"><div><h3>Mistakes to fix: ' + store.wrong.length + '</h3><p class="muted">Try the questions you got wrong before. Get one right and it leaves this list.</p></div>' +
+      '<button class="btn small" data-act="fix">Fix my mistakes</button></section>';
+  }
+  h += '<section style="display:flex;flex-direction:column;gap:12px"><div class="section-head"><h2>Pick a topic</h2><span class="muted" style="font-size:.9rem">4 key-idea cards + 5 questions each</span></div><div class="topics">';
+  TOPICS.forEach(function (t) {
+    var b = store.best[t.id];
+    h += '<button class="topic" data-act="topic" data-id="' + t.id + '">' + iconBox(t) +
+      '<span class="tname">' + t.name + '</span><span class="tsub">' + t.sub + "</span>" +
+      '<span class="meter"><span class="bar"><i style="width:' + (b || 0) + '%"></i></span>' + (b == null ? "Not tried" : "Best " + b + "%") + "</span></button>";
+  });
+  h += "</div></section>";
+  h += '<details class="tips"><summary>6 exam habits that save marks</summary><ol>' + TIPS.map(function (t) { return "<li>" + kw(t) + "</li>"; }).join("") + "</ol></details>";
+  h += '<p class="foot">Topics follow the MOE Primary Science syllabus themes usually tested at P4 (Diversity of matter, Energy, Systems, Cycles). Questions are original, written in the style of top Singapore school papers, with keyword-based marking. Check your school\'s WA4 topic list, as schools may differ. Progress is saved in this browser only.</p>';
+  app.innerHTML = h;
+}
+
+/* ---------- Topic: bite-size cards ---------- */
+function renderTopic() {
+  var t = topicOf(S.tid), i = S.card, c = t.cards[i];
+  var h = '<button class="link-btn back" data-act="home">← All topics</button>';
+  h += '<header class="top"><div style="display:flex;gap:12px;align-items:center">' + iconBox(t) + '<div class="brand"><span class="eyebrow">Learn first</span><h2>' + t.name + "</h2></div></div></header>";
+  h += '<article class="learn-card"><span class="eyebrow num">Key idea ' + (i + 1) + " of " + t.cards.length + "</span><h3>" + c.h + "</h3><ul>" +
+    c.pts.map(function (p) { return "<li>" + kw(p) + "</li>"; }).join("") + "</ul>" +
+    (c.trap ? '<p class="trapnote"><b>Common mistake:</b> ' + kw(c.trap) + "</p>" : "") + "</article>";
+  h += '<div class="dots">' + t.cards.map(function (_, j) { return '<i class="' + (j === i ? "on" : "") + '"></i>'; }).join("") + "</div>";
+  h += '<div class="btn-row" style="justify-content:space-between">';
+  h += i > 0 ? '<button class="btn ghost" data-act="card" data-d="-1">Back</button>' : "<span></span>";
+  h += i < t.cards.length - 1
+    ? '<button class="btn" data-act="card" data-d="1">Next idea</button>'
+    : '<button class="btn" data-act="tquiz">Start 5 questions</button>';
+  h += "</div>";
+  h += '<p class="muted" style="text-align:center;font-size:.9rem">Already know this? <button class="link-btn" data-act="tquiz">Skip to the questions</button></p>';
+  app.innerHTML = h;
+}
+
+/* ---------- Building quizzes ---------- */
+function buildTopicQuiz(tid) {
+  var t = topicOf(tid);
+  var m = shuffle(t.qs.filter(function (q) { return q.t === "mcq"; })).slice(0, 3);
+  var o = shuffle(t.qs.filter(function (q) { return q.t === "oe"; })).slice(0, 2);
+  return m.concat(o);
+}
+function buildMock() {
+  function spread(list, n, perTopic) {
+    var out = [], count = {};
+    shuffle(list).forEach(function (q) { if (out.length < n && (count[q.topic] || 0) < perTopic) { out.push(q); count[q.topic] = (count[q.topic] || 0) + 1; } });
+    return out;
+  }
+  return spread(allQs.filter(function (q) { return q.t === "mcq"; }), 8, 2)
+    .concat(spread(allQs.filter(function (q) { return q.t === "oe"; }), 4, 1));
+}
+function startQuiz(mode, qs, tid) {
+  go({ screen: "quiz", mode: mode, tid: tid, qs: qs, i: 0, log: [], done: false, hint: false });
+}
+
+/* ---------- Quiz ---------- */
+function renderQuiz() {
+  var q = S.qs[S.i], t = topicOf(q.topic), n = S.qs.length;
+  var got = S.log.reduce(function (a, r) { return a + r.got; }, 0);
+  var title = S.mode === "mock" ? "WA4 mock paper" : S.mode === "fix" ? "Fix my mistakes" : t.name;
+  var h = '<div class="qbar"><div class="qbar-row"><button class="link-btn" data-act="home">✕ Quit</button><span>' + title + "</span><span>Score " + got + "</span></div>" +
+    '<div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="' + n + '" aria-valuenow="' + (S.i + (S.done ? 1 : 0)) + '"><i style="width:' + ((S.i + (S.done ? 1 : 0)) / n * 100) + '%"></i></div></div>';
+  h += '<article class="qcard"><div class="qhead"><span class="booklet" style="background:var(--t' + t.n + ");color:var(--t" + t.n + '-ink)">' +
+    (q.t === "mcq" ? "Booklet A · " : "Booklet B · ") + t.name + '</span><span class="marks">Q' + (S.i + 1) + " of " + n + " · [" + marksOf(q) + "]</span></div>";
+  h += '<p class="qtext">' + q.q + "</p>";
+  if (q.setup) h += '<div class="setup">' + q.setup + "</div>";
+  if (q.q2) h += '<p class="qtext">' + q.q2 + "</p>";
+
+  var r = S.done ? S.log[S.log.length - 1] : null;
+  if (q.t === "mcq") {
+    h += '<div class="opts">';
+    q.opts.forEach(function (o, k) {
+      var cls = "";
+      if (S.done) cls = k === q.ans ? "right" : k === r.chosen ? "wrong" : "dim";
+      h += '<button class="opt ' + cls + '" data-act="pick" data-k="' + k + '"' + (S.done ? " disabled" : "") + '><span class="on">(' + (k + 1) + ")</span><span>" + o + "</span></button>";
+    });
+    h += "</div>";
+  } else {
+    h += '<label for="ans" class="muted" style="font-size:.9rem">Write your answer. Use Science key words.</label>' +
+      '<textarea id="ans"' + (S.done ? " disabled" : "") + ' placeholder="Type your answer here…">' + esc(S.draft || "") + "</textarea>";
+    if (!S.done) {
+      if (S.hint) h += '<p class="hint"><b>Hint:</b> ' + kw(q.hint) + " Examiners look for " + q.groups.length + " key ideas.</p>";
+      h += '<div class="btn-row"><button class="btn" data-act="check" id="checkBtn"' + ((S.draft || "").trim() ? "" : " disabled") + ">Check my answer</button>" +
+        (S.hint ? "" : '<button class="btn ghost" data-act="hint">Need a hint?</button>') + "</div>";
+    }
+  }
+  if (S.done) h += feedback(q, r);
+  h += "</article>";
+  if (S.done) h += '<div class="btn-row" style="justify-content:flex-end"><button class="btn" data-act="next" id="nextBtn">' + (S.i < n - 1 ? "Next question" : "See my results") + "</button></div>";
+  app.innerHTML = h;
+
+  var ta = document.getElementById("ans");
+  if (ta && !S.done) ta.addEventListener("input", function () { S.draft = ta.value; document.getElementById("checkBtn").disabled = !ta.value.trim(); });
+  if (S.done) { var nb = document.getElementById("nextBtn"); if (nb) nb.focus({ preventScroll: true }); }
+}
+
+function chips(list) {
+  return '<div class="chips"><span class="lbl">Key words:</span>' + list.map(function (k) { return '<mark class="kw">' + k + "</mark>"; }).join(" ") + "</div>";
+}
+
+function feedback(q, r) {
+  if (q.t === "mcq") {
+    if (r.correct) return '<div class="fb good"><h3>Correct! +' + marksOf(q) + "</h3><p>" + kw(q.why) + "</p>" + chips(q.kw) + "</div>";
+    return '<div class="fb bad"><h3>Not quite</h3>' +
+      '<p><span class="tag trap">Watch out</span>You chose (' + (r.chosen + 1) + "). " + kw(q.trap[r.chosen] || "") + "</p>" +
+      '<p><span class="tag why">Answer (' + (q.ans + 1) + ')</span>' + kw(q.why) + "</p>" + chips(q.kw) + "</div>";
+  }
+  var cls = r.correct ? "good" : r.hits.some(Boolean) ? "part" : "bad";
+  var head = r.correct ? "Full marks! +" + r.got : r.got > 0 ? "Partly there: " + r.got + " of " + marksOf(q) + " marks" : "Let's fix this: 0 of " + marksOf(q) + " marks";
+  var h = '<div class="fb ' + cls + '"><h3>' + head + "</h3>";
+  h += '<p class="muted" style="font-size:.9rem">Your answer, with the key words you used highlighted:</p><div class="yours">' + highlightAnswer(r.text, q) + "</div>";
+  h += '<ul class="kwlist">' + q.groups.map(function (g, i) {
+    return r.hits[i]
+      ? '<li><span class="ok">✓</span><span>Got it: <mark class="kw">' + g.label + "</mark></span></li>"
+      : '<li><span class="no">✗</span><span>Missing: <mark class="miss">' + g.label + "</mark></span></li>";
+  }).join("") + "</ul>";
+  if (!r.correct && q.trap) h += '<p><span class="tag trap">Watch out</span>' + kw(q.trap) + "</p>";
+  h += '<p class="muted" style="font-size:.9rem">Model answer:</p><p class="model">' + kw(q.model) + "</p></div>";
+  return h;
+}
+
+function highlightAnswer(text, q) {
+  var out = esc(text);
+  q.groups.forEach(function (g) { g.any.forEach(function (v) { out = out.replace(rx(v), function (m) { return "\u0001" + m + "\u0002"; }); }); });
+  out = out.replace(/\u0001+/g, "\u0001").replace(/\u0002+/g, "\u0002");
+  return out.replace(/\u0001/g, '<mark class="kw">').replace(/\u0002/g, "</mark>");
+}
+
+function gradeOE(q, text) {
+  var t = " " + text + " ";
+  var hits = q.groups.map(function (g) { return g.any.some(function (v) { return rx(v).test(t); }); });
+  var n = hits.filter(Boolean).length;
+  var got = Math.round(n / q.groups.length * marksOf(q) * 2) / 2;
+  return { hits: hits, got: got, correct: n === q.groups.length, text: text };
+}
+
+function record(q, r) {
+  S.log.push(r); S.done = true;
+  store.answered++;
+  if (r.correct) clearWrong(q.id); else addWrong(q.id);
+  save(); render();
+}
+
+/* ---------- Results ---------- */
+function finish() {
+  var total = S.qs.reduce(function (a, q) { return a + marksOf(q); }, 0);
+  var got = S.log.reduce(function (a, r) { return a + r.got; }, 0);
+  var pct = Math.round(got / total * 100);
+  var stars = pct >= 80 ? 3 : pct >= 60 ? 2 : pct >= 40 ? 1 : 0;
+  store.stars += stars;
+  if (S.mode === "topic") store.best[S.tid] = Math.max(store.best[S.tid] || 0, pct);
+  save();
+  go({ screen: "result", mode: S.mode, tid: S.tid, qs: S.qs, log: S.log, got: got, total: total, pct: pct, stars: stars });
+}
+
+function renderResult() {
+  var msg = S.pct >= 80 ? "Excellent! You are WA4-ready on this." : S.pct >= 60 ? "Good work! Fix the few mistakes below." : S.pct >= 40 ? "Getting there. Read the key words below, then try again." : "Good try. Go through the key-idea cards first, then try again.";
+  var h = '<section class="result"><span class="eyebrow">' + (S.mode === "mock" ? "WA4 mock paper" : S.mode === "fix" ? "Fix my mistakes" : topicOf(S.tid).name) + "</span>" +
+    '<div class="stars" aria-label="' + S.stars + ' of 3 stars">' + [0, 1, 2].map(function (i) { return STAR.replace("<svg", '<svg class="' + (i < S.stars ? "full" : "empty") + '"'); }).join("") + "</div>" +
+    '<div class="score">' + S.got + " / " + S.total + '</div><p class="muted">' + S.pct + "% · +" + S.stars + " stars</p><p>" + msg + "</p>";
+  var wrong = [];
+  S.qs.forEach(function (q, i) { if (!S.log[i].correct) wrong.push(q); });
+  if (wrong.length) {
+    h += '<h3 style="margin-top:6px">Remember these key words</h3><div class="mistakes">';
+    wrong.forEach(function (q) {
+      var words = q.t === "mcq" ? q.kw : q.groups.map(function (g) { return g.label; });
+      h += '<div class="mist"><span class="eyebrow">' + topicOf(q.topic).name + '</span><p style="font-size:.95rem">' + (q.q2 ? q.q2 : q.q) + "</p>" +
+        chips(words) + "</div>";
+    });
+    h += "</div>";
+  } else {
+    h += "<p><b>No mistakes. Every key word was there.</b></p>";
+  }
+  h += '<div class="btn-row">';
+  if (wrong.length) h += '<button class="btn" data-act="retrywrong">Try my mistakes again</button>';
+  if (S.mode === "topic") h += '<button class="btn ' + (wrong.length ? "ghost" : "") + '" data-act="tquiz">New 5 questions</button><button class="btn ghost" data-act="topic" data-id="' + S.tid + '">Review key ideas</button>';
+  if (S.mode === "mock") h += '<button class="btn ' + (wrong.length ? "ghost" : "") + '" data-act="mock">New mock paper</button>';
+  h += '<button class="btn ghost" data-act="home">All topics</button></div></section>';
+  app.innerHTML = h;
+}
+
+/* ---------- Events ---------- */
+app.addEventListener("click", function (e) {
+  var b = e.target.closest("[data-act]");
+  if (!b || b.disabled) return;
+  var act = b.getAttribute("data-act");
+  if (act === "home") go({ screen: "home" });
+  else if (act === "topic") go({ screen: "topic", tid: b.getAttribute("data-id"), card: 0 });
+  else if (act === "card") { S.card += +b.getAttribute("data-d"); render(); }
+  else if (act === "tquiz") startQuiz("topic", buildTopicQuiz(S.tid), S.tid);
+  else if (act === "mock") startQuiz("mock", buildMock());
+  else if (act === "fix") startQuiz("fix", shuffle(store.wrong.map(function (id) { return byId[id]; }).filter(Boolean)).slice(0, 8));
+  else if (act === "retrywrong") { var w = S.qs.filter(function (q, i) { return !S.log[i].correct; }); startQuiz("fix", w); }
+  else if (act === "hint") { S.hint = true; render(); }
+  else if (act === "pick" && !S.done) {
+    var q = S.qs[S.i], k = +b.getAttribute("data-k"), ok = k === q.ans;
+    record(q, { chosen: k, correct: ok, got: ok ? marksOf(q) : 0 });
+  }
+  else if (act === "check" && !S.done) {
+    var text = (S.draft || "").trim();
+    if (text) record(S.qs[S.i], gradeOE(S.qs[S.i], text));
+  }
+  else if (act === "next") {
+    if (S.i < S.qs.length - 1) { S.i++; S.done = false; S.hint = false; S.draft = ""; render(); window.scrollTo(0, 0); }
+    else finish();
+  }
+});
+document.addEventListener("keydown", function (e) {
+  if (S.screen !== "quiz" || S.done || e.target.tagName === "TEXTAREA") return;
+  var q = S.qs[S.i];
+  if (q.t === "mcq" && /^[1-4]$/.test(e.key)) { var k = +e.key - 1; record(q, { chosen: k, correct: k === q.ans, got: k === q.ans ? marksOf(q) : 0 }); }
+});
+
+render();
+})();
+</script>
+</body>
+</html>

@@ -102,6 +102,15 @@ Tap code blocks to build a program, then press **Run** to see Sparky execute it!
 - **5 Title Levels** — Sparky's Friend → AI Explorer → AI Student → AI Wizard → AI Champion
 - **Progress Tracking** — see completion rates for lessons, quizzes, and coding
 
+### 🔬 P4 Science WA4 Coach (`/p4-science/`)
+A standalone revision page for Singapore Primary 4 Science, served at `/p4-science/` after `npm run build:web`:
+- **6 topics:** Matter, Heat, Light, Digestive System, Plant Parts, Life Cycles
+- **Bite-size:** 4 key-idea cards, then 5 questions per topic (3 MCQ + 2 open-ended)
+- **WA4 mock paper:** 8 MCQs (Booklet A) + 4 open-ended (Booklet B), mixed from all topics
+- **Learns from mistakes:** each wrong option explains the misconception, and key words are highlighted. Open-ended answers are checked for the key words examiners look for, with missing ones flagged.
+- **Fix my mistakes:** questions answered wrongly come back until they are answered correctly
+- Source: `public/p4-science/index.html` (plain HTML/JS, no build step)
+
 ### 🤖 Sparky the Robot
 An animated mascot that bounces, celebrates, and reacts to the child's progress throughout the app.
 
